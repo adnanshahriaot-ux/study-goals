@@ -53,19 +53,19 @@ export const DateCard: React.FC<DateCardProps> = ({
         });
 
         // Get topics from Targets that aren't in this Daily Plan card
-        Object.entries(tableData.table1).forEach(([cardId, cols]) => {
-            // Find the target title from targetCards metadata
-            const targetMeta = tableData.targetCards?.find(t => t.id === cardId);
-            const targetTitle = targetMeta?.title || 'Target';
+        (tableData.targetCards || []).forEach(card => {
+            const targetTitle = card.title;
+            const targetData = card.data || {};
 
-            Object.entries(cols).forEach(([column, topicIds]) => {
-                topicIds.forEach(topicId => {
-                    if (!alreadyInDailyPlan.has(topicId) && completedTopics[topicId]) {
+            Object.entries(targetData).forEach(([colName, topicIds]) => {
+                topicIds.forEach(id => {
+                    const topic = completedTopics[id];
+                    if (topic && !alreadyInDailyPlan.has(id) && topic.progress < 100) {
                         topics.push({
-                            topicId,
-                            topic: completedTopics[topicId],
+                            topicId: id,
+                            topic,
                             targetTitle,
-                            column
+                            column: colName
                         });
                     }
                 });
