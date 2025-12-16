@@ -90,58 +90,63 @@ export const Dashboard: React.FC = () => {
     return (
         <div className="min-h-screen bg-bg-primary">
             <div className="max-w-7xl mx-auto px-4 py-6">
-                <div className="flex flex-col gap-4 mb-6">
-                    {/* Row 1: Logo & Icons */}
-                    <div className="flex items-center justify-between lg:justify-start gap-4">
-                        <h1 className="text-2xl font-bold text-white">
-                            Study<span className="bg-gradient-to-r from-accent-green to-accent-blue bg-clip-text text-transparent">Goals</span>
-                        </h1>
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => setShowCalendar(true)}
-                                className="p-2 bg-bg-hover border border-border rounded-lg text-gray-400 hover:text-white transition-all"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" strokeWidth={2} />
-                                    <line x1="3" y1="10" x2="21" y2="10" strokeWidth={2} />
-                                </svg>
-                            </button>
-                            <button
-                                onClick={() => setShowSettings(true)}
-                                className="p-2 bg-bg-hover border border-border rounded-lg text-gray-400 hover:text-white transition-all"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="3" strokeWidth={2} />
-                                    <path strokeWidth={2} d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.08 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1.08z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+                {/* 3-Column Header for Single Row Appearance */}
+                <div className="flex flex-col lg:flex-row gap-6 mb-6">
 
-                    {/* Row 2: Toggles + Progress + Countdown */}
-                    <div className="flex flex-col lg:flex-row items-center gap-4">
-                        {/* View Toggle */}
-                        <div className="glass-card flex rounded-lg p-1 shrink-0">
+                    {/* Column 1: Title/Icons AND Toggles (Stacked) */}
+                    <div className="flex flex-col justify-between shrink-0 gap-3 min-w-[300px]">
+                        {/* Title & Icons */}
+                        <div className="flex items-center justify-between gap-4">
+                            <h1 className="text-2xl font-bold text-white">
+                                Study<span className="bg-gradient-to-r from-accent-green to-accent-blue bg-clip-text text-transparent">Goals</span>
+                            </h1>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setShowCalendar(true)}
+                                    className="p-2 bg-bg-hover border border-border rounded-lg text-gray-400 hover:text-white transition-all"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" strokeWidth={2} />
+                                        <line x1="3" y1="10" x2="21" y2="10" strokeWidth={2} />
+                                    </svg>
+                                </button>
+                                <button
+                                    onClick={() => setShowSettings(true)}
+                                    className="p-2 bg-bg-hover border border-border rounded-lg text-gray-400 hover:text-white transition-all"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="3" strokeWidth={2} />
+                                        <path strokeWidth={2} d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.08 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1.08z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* View Toggles */}
+                        <div className="glass-card flex rounded-lg p-1 w-fit">
                             {(['table1', 'table2'] as const).map((v) => (
                                 <button
                                     key={v}
                                     onClick={() => setView(v)}
-                                    className={`px-4 py-2 rounded-md text-sm font-semibold transition-all flex items-center gap-2 ${view === v ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-md' : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                    className={`px-6 py-2 rounded-md text-sm font-semibold transition-all flex items-center gap-2 ${view === v ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-md' : 'text-gray-400 hover:text-white hover:bg-white/5'
                                         }`}
                                 >
                                     <span>{v === 'table1' ? '🎯' : '📅'}</span>
-                                    <span className="hidden xl:inline">{v === 'table1' ? 'Long Term' : 'Daily'}</span>
-                                    <span className="inline xl:hidden">{v === 'table1' ? 'Targets' : 'Daily'}</span>
+                                    <span>{v === 'table1' ? 'Long Term' : 'Daily'}</span>
                                 </button>
                             ))}
                         </div>
+                    </div>
 
-                        {/* Progress Bar */}
-                        <div className="flex-1 w-full lg:w-auto">
+                    {/* Column 2: Progress Bar */}
+                    <div className="flex-1 w-full lg:w-auto flex items-end pb-1">
+                        <div className="w-full">
                             <ProgressBar percentage={stats.pct} completed={stats.completed} total={stats.total} />
                         </div>
+                    </div>
 
-                        {/* Countdown */}
+                    {/* Column 3: Countdown */}
+                    <div className="flex items-end">
                         <Header />
                     </div>
                 </div>
