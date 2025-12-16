@@ -67,45 +67,62 @@ export const TargetCard: React.FC<TargetCardProps> = ({
     return (
         <div className="bg-bg-card border border-border rounded-xl mb-4 overflow-hidden">
             {/* Compact Header */}
-            <div className="px-4 py-3 flex items-center gap-3">
-                {/* Title */}
-                <h3 className="text-base font-bold text-white flex-1 truncate flex items-center gap-2">
-                    <span className="text-accent-purple">🎯</span>
-                    {cardMeta.title}
-                </h3>
+            <div className="px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3">
+                {/* Title Row (Mobile: Top, Desktop: Left) */}
+                <div className="flex items-center justify-between w-full sm:w-auto sm:flex-1 gap-2">
+                    <h3 className="text-base font-bold text-white flex-1 truncate flex items-center gap-2">
+                        <span className="text-accent-purple">🎯</span>
+                        {cardMeta.title}
+                    </h3>
 
-                {/* Date Range Pill */}
-                <span className="text-xs text-gray-500 hidden sm:inline">
-                    {formatDateShort(cardMeta.startDate)} → {formatDateShort(cardMeta.endDate)}
-                </span>
+                    {/* Delete button (Mobile only - right aligned on top row) */}
+                    <button
+                        onClick={() => onDeleteCard(cardMeta.id)}
+                        className="sm:hidden p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                </div>
 
-                {/* Days Badge */}
-                <span className={`text-xs font-bold px-2 py-1 rounded-lg ${daysInfo.daysRemaining <= 3
-                    ? 'bg-red-500/20 text-red-400'
-                    : daysInfo.daysRemaining <= 7
-                        ? 'bg-yellow-500/20 text-yellow-400'
-                        : 'bg-accent-blue/20 text-accent-blue'
-                    }`}>
-                    {daysInfo.daysRemaining}d
-                </span>
+                {/* Metadata Row (Mobile: Bottom, Desktop: Right) */}
+                <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto text-xs">
+                    {/* Date Range Pill */}
+                    <span className="text-gray-500 bg-white/5 px-2 py-1 rounded-md">
+                        {formatDateShort(cardMeta.startDate)} → {formatDateShort(cardMeta.endDate)}
+                    </span>
 
-                {/* Progress Badge */}
-                <span className={`text-xs font-bold px-2 py-1 rounded-lg ${percentage === 100
-                    ? 'bg-green-500/20 text-green-400'
-                    : 'bg-white/10 text-gray-300'
-                    }`}>
-                    {completedCount}/{totalTopics}
-                </span>
+                    <div className="flex items-center gap-2">
+                        {/* Days Badge */}
+                        <span className={`font-bold px-2 py-1 rounded-lg ${daysInfo.daysRemaining <= 3
+                            ? 'bg-red-500/20 text-red-400'
+                            : daysInfo.daysRemaining <= 7
+                                ? 'bg-yellow-500/20 text-yellow-400'
+                                : 'bg-accent-blue/20 text-accent-blue'
+                            }`}>
+                            {daysInfo.daysRemaining}d
+                        </span>
 
-                {/* Delete */}
-                <button
-                    onClick={() => onDeleteCard(cardMeta.id)}
-                    className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
-                >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </button>
+                        {/* Progress Badge */}
+                        <span className={`font-bold px-2 py-1 rounded-lg ${percentage === 100
+                            ? 'bg-green-500/20 text-green-400'
+                            : 'bg-white/10 text-gray-300'
+                            }`}>
+                            {completedCount}/{totalTopics}
+                        </span>
+
+                        {/* Delete (Desktop only) */}
+                        <button
+                            onClick={() => onDeleteCard(cardMeta.id)}
+                            className="hidden sm:block p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {/* Slim Combined Progress Bar */}
