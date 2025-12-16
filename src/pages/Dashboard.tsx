@@ -50,8 +50,11 @@ export const Dashboard: React.FC = () => {
         // Collect IDs from Target Cards
         (tableData.targetCards || []).forEach(card => {
             // Check both card.data (new) and table1 (legacy/current)
-            const data = card.data || tableData.table1[card.id] || {};
-            Object.values(data).forEach(columnTopics => {
+            // Fix: card.data might be initialized as {} so we must check if it has keys
+            const hasNewData = card.data && Object.keys(card.data).length > 0;
+            const data = hasNewData ? card.data : (tableData.table1[card.id] || {});
+
+            Object.values(data || {}).forEach(columnTopics => {
                 if (Array.isArray(columnTopics)) {
                     columnTopics.forEach(id => activeTopicIds.add(id));
                 }

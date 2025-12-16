@@ -56,10 +56,11 @@ export const DateCard: React.FC<DateCardProps> = ({
         if (tableData.targetCards) {
             tableData.targetCards.forEach(card => {
                 const targetTitle = card.data ? card.title : card.title; // Keep title simple
-                // Fallback to table1 for data source
-                const targetData = card.data || tableData.table1[card.id] || {};
+                // Fallback to table1 for data source if card.data is empty
+                const hasNewData = card.data && Object.keys(card.data).length > 0;
+                const targetData = hasNewData ? card.data : (tableData.table1[card.id] || {});
 
-                Object.entries(targetData).forEach(([colName, topicIds]) => {
+                Object.entries(targetData || {}).forEach(([colName, topicIds]) => {
                     if (Array.isArray(topicIds)) {
                         topicIds.forEach(id => {
                             const topic = completedTopics[id];
