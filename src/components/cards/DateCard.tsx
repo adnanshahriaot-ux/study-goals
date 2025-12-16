@@ -117,14 +117,14 @@ export const DateCard: React.FC<DateCardProps> = ({
     };
 
     return (
-        <div className="bg-bg-card border border-border rounded-xl mb-4 overflow-hidden animate-slideUp">
+        <div className="bg-bg-card border border-border rounded-lg mb-3 overflow-hidden animate-slideUp">
             {/* Header */}
-            <div className="px-5 py-4 border-b border-white/10">
-                <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="px-3 py-2 border-b border-white/10">
+                <div className="flex items-center justify-between gap-2 mb-2">
                     <h3
                         contentEditable
                         suppressContentEditableWarning
-                        className="text-lg font-bold text-white flex-1 truncate"
+                        className="text-sm font-bold text-white flex-1 truncate"
                         onBlur={(e) => {
                             const newDate = e.currentTarget.textContent?.trim();
                             if (newDate && newDate !== date) onDateChange(date, newDate);
@@ -146,32 +146,30 @@ export const DateCard: React.FC<DateCardProps> = ({
                 </div>
 
                 {/* Progress Bar */}
-                <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                        <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
-                            <div
-                                className={`h-full bg-gradient-to-r ${getProgressGradient()} rounded-full transition-all duration-500 ease-out`}
-                                style={{ width: `${percentage}%` }}
-                            />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className={`text-sm font-bold ${percentage === 100 ? 'text-green-400' : 'text-white'}`}>
-                                {Math.round(percentage)}%
-                            </span>
-                            <span className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">
-                                {completedCount}/{totalTopics}
-                            </span>
-                        </div>
+                <div className="flex items-center gap-2">
+                    <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <div
+                            className={`h-full bg-gradient-to-r ${getProgressGradient()} rounded-full transition-all duration-500 ease-out`}
+                            style={{ width: `${percentage}%` }}
+                        />
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <span className={`text-xs font-bold ${percentage === 100 ? 'text-green-400' : 'text-white'}`}>
+                            {Math.round(percentage)}%
+                        </span>
+                        <span className="text-[10px] text-gray-500 bg-white/5 px-1.5 py-0.5 rounded">
+                            {completedCount}/{totalTopics}
+                        </span>
                     </div>
                 </div>
             </div>
 
-            {/* Columns - Responsive Grid: Single Column Mobile, 4-Col Desktop */}
-            <div className="p-3 grid grid-cols-1 md:grid-cols-4 gap-3">
+            {/* Columns - Compact */}
+            <div className="p-2 grid grid-cols-1 md:grid-cols-4 gap-2">
                 {columns.map((col) => (
-                    <div key={col} className="bg-gray-800/40 rounded-lg p-3 md:p-2 min-h-[60px] border border-white/5">
-                        <h4 className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide px-1 md:px-0">{col}</h4>
-                        <div className="space-y-2 md:space-y-1">
+                    <div key={col} className="bg-gray-800/40 rounded-md p-1.5 min-h-[40px] border border-white/5">
+                        <h4 className="text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wide px-1">{col}</h4>
+                        <div className="space-y-1">
                             {(dateData[col] || []).map((topicId) => {
                                 const topic = completedTopics[topicId];
                                 if (!topic) return null;
@@ -179,14 +177,13 @@ export const DateCard: React.FC<DateCardProps> = ({
                                     <div
                                         key={topicId}
                                         onClick={(e) => handleProgressClick(e, topic, topicId)}
-                                        className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group flex items-center gap-2 cursor-pointer relative pr-8"
-                                    >
+                                        className="w-full text-left p-1.5 bg-bg-card border border-border rounded-md hover:border-accent-purple transition-all group flex items-center gap-1.5 cursor-pointer relative pr-6">
                                         <div
-                                            className={`w-3 h-3 rounded-full flex-shrink-0 transition-colors mt-1 ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
+                                            className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
                                                 } ${topic.progress > 0 && topic.progress < 100 ? 'border-2 border-accent-blue bg-transparent' : ''}`}
                                         />
-                                        <div className="flex-1 min-w-0 flex flex-col">
-                                            <span className={`text-sm truncate ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
+                                        <div className="flex-1 min-w-0">
+                                            <span className={`text-xs truncate block ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
                                                 {topic.name}
                                             </span>
                                             {topic.note && (
@@ -200,9 +197,7 @@ export const DateCard: React.FC<DateCardProps> = ({
                                                 </span>
                                             )}
                                         </div>
-                                        <span
-                                            className={`text-xs font-mono font-medium ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}
-                                        >
+                                        <span className={`text-[10px] font-mono ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}>
                                             {topic.progress}%
                                         </span>
 
@@ -231,19 +226,19 @@ export const DateCard: React.FC<DateCardProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="px-4 pb-4 flex gap-2">
+            <div className="px-2 pb-2 flex gap-2">
                 <button
                     onClick={() => onAddTopic(tableId, date)}
-                    className="flex-1 py-2.5 border-2 border-dashed border-white/20 rounded-xl text-gray-400 font-semibold hover:text-accent-blue hover:border-accent-blue hover:bg-accent-blue/5 transition-all"
+                    className="flex-1 py-1.5 border border-dashed border-white/20 rounded-md text-xs text-gray-400 font-medium hover:text-accent-blue hover:border-accent-blue transition-all"
                 >
-                    + Add New Topic
+                    + Add
                 </button>
 
                 {/* Pull from Targets button - only show in Daily Plan */}
                 {tableId === 'table2' && (
                     <button
                         onClick={() => setShowPullModal(true)}
-                        className="pull-button px-4 py-2.5 rounded-xl font-semibold bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all"
+                        className="px-3 py-1.5 rounded-md text-xs font-medium bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all"
                     >
                         ⬇ Pull
                     </button>

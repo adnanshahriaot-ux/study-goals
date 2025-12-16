@@ -65,12 +65,11 @@ export const TargetCard: React.FC<TargetCardProps> = ({
     };
 
     return (
-        <div className="bg-bg-card border border-border rounded-xl mb-4 overflow-hidden">
+        <div className="bg-bg-card border border-border rounded-lg mb-3 overflow-hidden">
             {/* Compact Header */}
-            <div className="px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3">
-                {/* Title Row (Mobile: Top, Desktop: Left) */}
+            <div className="px-3 py-2 flex flex-col sm:flex-row sm:items-center gap-2">
                 <div className="flex items-center justify-between w-full sm:w-auto sm:flex-1 gap-2">
-                    <h3 className="text-base font-bold text-white flex-1 truncate flex items-center gap-2">
+                    <h3 className="text-sm font-bold text-white flex-1 truncate flex items-center gap-1.5">
                         <span className="text-accent-purple">🎯</span>
                         {cardMeta.title}
                     </h3>
@@ -86,18 +85,18 @@ export const TargetCard: React.FC<TargetCardProps> = ({
                     </button>
                 </div>
 
-                {/* Metadata Row (Mobile: Bottom, Desktop: Right) */}
-                <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto text-xs">
+                {/* Metadata Row */}
+                <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto text-xs">
                     {/* Date Range Pill */}
-                    <span className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-accent-purple/10 text-accent-purple border border-accent-purple/20 shadow-[0_0_10px_-3px_rgba(168,85,247,0.3)] flex items-center gap-1.5">
+                    <span className="text-[10px] font-semibold px-2 py-1 rounded-md bg-accent-purple/10 text-accent-purple border border-accent-purple/20 flex items-center gap-1">
                         <span className="text-white/70">{formatDateShort(cardMeta.startDate)}</span>
                         <span className="text-accent-purple">→</span>
                         <span className="text-white">{formatDateShort(cardMeta.endDate)}</span>
                     </span>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                         {/* Days Badge */}
-                        <span className={`font-bold px-2 py-1 rounded-lg ${daysInfo.daysRemaining <= 3
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${daysInfo.daysRemaining <= 3
                             ? 'bg-red-500/20 text-red-400'
                             : daysInfo.daysRemaining <= 7
                                 ? 'bg-yellow-500/20 text-yellow-400'
@@ -107,7 +106,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({
                         </span>
 
                         {/* Progress Badge */}
-                        <span className={`font-bold px-2 py-1 rounded-lg ${percentage === 100
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${percentage === 100
                             ? 'bg-green-500/20 text-green-400'
                             : 'bg-white/10 text-gray-300'
                             }`}>
@@ -127,26 +126,26 @@ export const TargetCard: React.FC<TargetCardProps> = ({
                 </div>
             </div>
 
-            {/* Slim Combined Progress Bar */}
-            <div className="px-4 pb-3">
+            {/* Slim Progress Bar */}
+            <div className="px-3 pb-2">
                 <div className="flex items-center gap-2">
-                    <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
                         <div
                             className={`h-full rounded-full transition-all ${percentage === 100 ? 'bg-green-500' : 'bg-gradient-to-r from-accent-blue to-accent-purple'
                                 }`}
                             style={{ width: `${percentage}%` }}
                         />
                     </div>
-                    <span className="text-xs text-gray-500">{Math.round(percentage)}%</span>
+                    <span className="text-[10px] text-gray-500">{Math.round(percentage)}%</span>
                 </div>
             </div>
 
-            {/* Columns - Responsive Grid: Single Column Mobile, 3-Col Desktop */}
-            <div className="px-3 pb-2 grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* Columns - Compact */}
+            <div className="px-2 pb-2 grid grid-cols-1 md:grid-cols-3 gap-2">
                 {columns.map((col) => (
-                    <div key={col} className="bg-gray-800/40 rounded-lg p-2 md:p-2 min-h-[60px] border border-white/5">
-                        <h4 className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide px-1 md:px-0">{col}</h4>
-                        <div className="space-y-2 md:space-y-1">
+                    <div key={col} className="bg-gray-800/40 rounded-md p-1.5 min-h-[40px] border border-white/5">
+                        <h4 className="text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wide px-1">{col}</h4>
+                        <div className="space-y-1">
                             {(dateData[col] || []).map((topicId) => {
                                 const topic = completedTopics[topicId];
                                 if (!topic) return null;
@@ -154,14 +153,13 @@ export const TargetCard: React.FC<TargetCardProps> = ({
                                     <div
                                         key={topicId}
                                         onClick={(e) => handleProgressClick(e, topic, topicId)}
-                                        className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group flex items-center gap-2 cursor-pointer relative pr-8"
-                                    >
+                                        className="w-full text-left p-1.5 bg-bg-card border border-border rounded-md hover:border-accent-purple transition-all group flex items-center gap-1.5 cursor-pointer relative pr-6">
                                         <div
-                                            className={`w-3 h-3 rounded-full flex-shrink-0 transition-colors mt-1 ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
+                                            className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
                                                 } ${topic.progress > 0 && topic.progress < 100 ? 'border-2 border-accent-blue bg-transparent' : ''}`}
                                         />
-                                        <div className="flex-1 min-w-0 flex flex-col">
-                                            <span className={`text-sm truncate ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
+                                        <div className="flex-1 min-w-0">
+                                            <span className={`text-xs truncate block ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
                                                 {topic.name}
                                             </span>
                                             {topic.note && (
@@ -175,9 +173,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({
                                                 </span>
                                             )}
                                         </div>
-                                        <span
-                                            className={`text-xs font-mono ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}
-                                        >
+                                        <span className={`text-[10px] font-mono ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}>
                                             {topic.progress}%
                                         </span>
 
@@ -206,12 +202,12 @@ export const TargetCard: React.FC<TargetCardProps> = ({
             </div>
 
             {/* Add Topic Button */}
-            <div className="px-3 pb-3">
+            <div className="px-2 pb-2">
                 <button
                     onClick={() => onAddTopic('table1', cardMeta.id)}
-                    className="w-full py-2 text-sm border border-dashed border-white/20 rounded-lg text-gray-400 font-medium hover:text-accent-green hover:border-accent-green hover:bg-accent-green/5 transition-all"
+                    className="w-full py-1.5 text-xs border border-dashed border-white/20 rounded-md text-gray-400 font-medium hover:text-accent-green hover:border-accent-green transition-all"
                 >
-                    + Add Topic
+                    + Add
                 </button>
             </div>
         </div>
