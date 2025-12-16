@@ -114,7 +114,7 @@ export const Dashboard: React.FC = () => {
                 <div className="glass-card p-4 rounded-2xl flex flex-col lg:flex-row gap-4 mb-6 items-stretch">
 
                     {/* Column 1: Title/Icons AND Toggles (Stacked) */}
-                    <div className="flex flex-col justify-between shrink-0 gap-3 w-full lg:w-auto">
+                    <div className="flex flex-col justify-between shrink-0 gap-2 w-full lg:w-auto">
                         {/* Title & Icons */}
                         <div className="flex items-center justify-between gap-4 w-full">
                             <h1 className="text-2xl font-bold text-white">
@@ -136,19 +136,19 @@ export const Dashboard: React.FC = () => {
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <circle cx="12" cy="12" r="3" strokeWidth={2} />
-                                        <path strokeWidth={2} d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.08 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1.08z" />
+                                        <path strokeWidth={2} d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.08 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1.08z" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
 
                         {/* View Toggles */}
-                        <div className="bg-bg-card/50 border border-white/5 flex rounded-lg p-1 w-full sm:w-fit justify-between sm:justify-start">
+                        <div className="bg-bg-card/50 border border-white/5 flex rounded-lg p-1 w-fit">
                             {(['table1', 'table2'] as const).map((v) => (
                                 <button
                                     key={v}
                                     onClick={() => setView(v)}
-                                    className={`flex-1 px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-2 ${view === v ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-md' : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                    className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${view === v ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-md' : 'text-gray-400 hover:text-white hover:bg-white/5'
                                         }`}
                                 >
                                     <span>{v === 'table1' ? '🎯' : '📅'}</span>
