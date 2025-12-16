@@ -154,51 +154,49 @@ export const Dashboard: React.FC = () => {
 
                         {/* Row 2: Stats & Countdown Stack */}
                         <div className="grid grid-cols-1 gap-3">
-                            {/* Mobile Stats */}
-                            <div className="glass-card p-4 rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900/50 to-slate-900/50 relative overflow-hidden group">
+                            {/* Mobile Stats - Compact */}
+                            <div className="glass-card p-3 rounded-2xl border border-white/10 bg-gradient-to-br from-gray-800/60 to-slate-800/60 relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-gradient-to-r from-accent-blue/10 to-accent-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 <div className="relative z-10">
-                                    <div className="flex justify-between items-end mb-3">
-                                        <span className="text-gray-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-gray-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
                                             <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
-                                            Overall Progress
+                                            Progress
                                         </span>
-                                        <span className="text-2xl font-black text-white">{stats.pct.toFixed(0)}%</span>
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-[10px] font-medium text-gray-500">{stats.completed}/{stats.total}</span>
+                                            <span className="text-lg font-black text-white">{stats.pct.toFixed(0)}%</span>
+                                        </div>
                                     </div>
-                                    <div className="h-3 w-full bg-black/50 rounded-full overflow-hidden mb-2 border border-white/5">
+                                    <div className="h-2 w-full bg-gray-700/30 rounded-full overflow-hidden border border-white/5">
                                         <div
                                             className="h-full bg-gradient-to-r from-accent-green via-emerald-500 to-accent-blue transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(16,185,129,0.5)]"
                                             style={{ width: `${stats.pct}%` }}
                                         />
                                     </div>
-                                    <div className="text-right">
-                                        <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-white/5 text-gray-300 border border-white/10">
-                                            {stats.completed} of {stats.total} Topics Completed
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
 
-                            {/* Mobile Countdown - Redesigned */}
-                            <div className="glass-card p-4 rounded-2xl border border-accent-blue/20 bg-gradient-to-br from-blue-950/80 via-slate-900/80 to-purple-950/80 shadow-[0_0_20px_-5px_rgba(30,58,138,0.3)]">
-                                <div className="text-center mb-4">
-                                    <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-1 bg-gradient-to-r from-accent-blue via-indigo-400 to-accent-purple bg-clip-text text-transparent">
-                                        {settings.countdownSettings.title || 'Upcoming Exam'}
+                            {/* Mobile Countdown - Compact */}
+                            <div className="glass-card p-3 rounded-2xl border border-accent-blue/20 bg-gradient-to-br from-blue-900/30 via-slate-800/50 to-purple-900/30 shadow-[0_0_20px_-5px_rgba(30,58,138,0.3)]">
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.15em] bg-gradient-to-r from-accent-blue via-indigo-400 to-accent-purple bg-clip-text text-transparent">
+                                        {settings.countdownSettings.title || 'Exam'}
                                     </h3>
-                                    <div className="h-0.5 w-16 mx-auto bg-gradient-to-r from-transparent via-accent-blue/50 to-transparent rounded-full" />
+                                    <div className="h-0.5 w-8 bg-gradient-to-r from-accent-blue/50 to-transparent rounded-full" />
                                 </div>
 
                                 <div className="grid grid-cols-4 gap-2">
                                     {timeLeft.map((t, i) => (
                                         <div key={i} className="flex flex-col items-center group">
-                                            <div className="relative w-full aspect-square flex items-center justify-center mb-1.5">
-                                                <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${i === 3 ? 'from-emerald-500/20 to-green-600/10' : 'from-indigo-500/20 to-blue-600/10'} border border-white/10 group-hover:border-white/20 transition-all`} />
-                                                <span className={`relative text-xl md:text-2xl font-black ${i === 3 ? 'text-emerald-400' : 'text-white'}`}>
+                                            <div className="relative w-full h-10 flex items-center justify-center mb-1">
+                                                <div className={`absolute inset-0 rounded-lg bg-gradient-to-br ${i === 3 ? 'from-emerald-500/20 to-green-600/10' : 'from-indigo-500/20 to-blue-600/10'} border border-white/10 group-hover:border-white/20 transition-all`} />
+                                                <span className={`relative text-lg font-black ${i === 3 ? 'text-emerald-400' : 'text-white'}`}>
                                                     {t}
                                                 </span>
                                             </div>
-                                            <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider">
-                                                {['Days', 'Hrs', 'Mins', 'Secs'][i]}
+                                            <span className="text-[8px] font-bold text-gray-500 uppercase tracking-wider">
+                                                {['Day', 'Hr', 'Min', 'Sec'][i]}
                                             </span>
                                         </div>
                                     ))}
@@ -226,86 +224,95 @@ export const Dashboard: React.FC = () => {
 
                     {/* DESKTOP LAYOUT (hidden md:flex) - PRESERVED */}
                     <div className="hidden md:flex glass-card p-4 rounded-2xl flex-col lg:flex-row gap-4 items-stretch">
-                        {/* Column 1: Title/Icons AND Toggles (Stacked) */}
-                        <div className="flex flex-col justify-between shrink-0 gap-2 w-full lg:w-auto">
-                            {/* Title & Icons */}
-                            <div className="flex items-center justify-between gap-4 w-full">
-                                <h1 className="text-2xl font-bold text-white">
-                                    Study<span className="bg-gradient-to-r from-accent-green to-accent-blue bg-clip-text text-transparent">Goals</span>
-                                </h1>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => setShowCalendar(true)}
-                                        className="p-1.5 bg-white/5 border border-white/10 rounded-lg text-gray-400 hover:text-white transition-all hover:bg-white/10"
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <rect x="3" y="4" width="18" height="18" rx="2" strokeWidth={2} />
-                                            <line x1="3" y1="10" x2="21" y2="10" strokeWidth={2} />
-                                        </svg>
-                                    </button>
-                                    <button
-                                        onClick={() => setShowSettings(true)}
-                                        className="p-1.5 bg-white/5 border border-white/10 rounded-lg text-gray-400 hover:text-white transition-all hover:bg-white/10"
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <circle cx="12" cy="12" r="3" strokeWidth={2} />
-                                            <path strokeWidth={2} d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.08 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1.08z" />
-                                        </svg>
-                                    </button>
+                        {/* Column 1: Title & Toggles (Glassmorphic Glow) */}
+                        <div className="bg-bg-card/80 border border-accent-purple/30 rounded-xl p-3 shadow-[0_0_15px_-5px_rgba(168,85,247,0.25)] flex flex-col justify-center gap-2 min-w-[240px] relative group">
+                            <div className="absolute inset-0 bg-gradient-to-br from-accent-purple/5 to-accent-blue/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" />
+                            <div className="relative z-10 flex flex-col gap-1.5">
+                                {/* Title & Icons */}
+                                <div className="flex items-center justify-between gap-4 w-full">
+                                    <h1 className="text-xl font-bold text-white">
+                                        Study<span className="bg-gradient-to-r from-accent-green to-accent-blue bg-clip-text text-transparent">Goals</span>
+                                    </h1>
+                                    <div className="flex items-center gap-1.5">
+                                        <button
+                                            onClick={() => setShowCalendar(true)}
+                                            className="p-1.5 bg-white/5 border border-white/10 rounded-lg text-gray-400 hover:text-white transition-all hover:bg-white/10"
+                                        >
+                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" strokeWidth={2} />
+                                                <line x1="3" y1="10" x2="21" y2="10" strokeWidth={2} />
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onClick={() => setShowSettings(true)}
+                                            className="p-1.5 bg-white/5 border border-white/10 rounded-lg text-gray-400 hover:text-white transition-all hover:bg-white/10"
+                                        >
+                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <circle cx="12" cy="12" r="3" strokeWidth={2} />
+                                                <path strokeWidth={2} d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.08 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1.08z" />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* View Toggles */}
-                            <div className="bg-bg-card/50 border border-white/5 flex rounded-lg p-1 w-fit">
-                                {(['table1', 'table2'] as const).map((v) => (
-                                    <button
-                                        key={v}
-                                        onClick={() => setView(v)}
-                                        className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-2 ${view === v ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-md' : 'text-gray-400 hover:text-white hover:bg-white/5'
-                                            }`}
-                                    >
-                                        <span>{v === 'table1' ? '🎯' : '🗓️'}</span>
-                                        <span>{v === 'table1' ? 'Target' : 'Daily'}</span>
-                                    </button>
-                                ))}
+                                {/* View Toggles */}
+                                <div className="bg-bg-card/50 border border-white/5 flex rounded-lg p-1 w-full">
+                                    {(['table1', 'table2'] as const).map((v) => (
+                                        <button
+                                            key={v}
+                                            onClick={() => setView(v)}
+                                            className={`flex-1 py-1.5 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-2 ${view === v ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-sm' : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                                }`}
+                                        >
+                                            <span>{v === 'table1' ? '🎯' : '🗓️'}</span>
+                                            <span>{v === 'table1' ? 'Target' : 'Daily'}</span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
                         {/* Column 2: Stats (Fill Remaining) */}
-                        <div className="flex-1 bg-black/20 rounded-xl p-3 border border-white/5 flex flex-col justify-center">
-                            <div className="flex justify-between items-end mb-2">
-                                <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">Overall Progress</span>
-                                <span className="text-2xl font-bold text-white">{stats.pct.toFixed(0)}%</span>
-                            </div>
-                            <div className="h-3 w-full bg-black/40 rounded-full overflow-hidden mb-2">
-                                <div
-                                    className="h-full bg-gradient-to-r from-accent-green to-accent-blue transition-all duration-1000 ease-out"
-                                    style={{ width: `${stats.pct}%` }}
-                                />
-                            </div>
-                            <div className="text-right">
-                                <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-green/20 text-accent-green border border-accent-green/20">
-                                    {stats.completed} / {stats.total} DONE
-                                </span>
+                        <div className="flex-1 bg-black/20 rounded-xl p-3 border border-accent-green/30 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)] flex flex-col justify-center relative overflow-hidden group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-accent-green/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div className="relative z-10">
+                                <div className="flex justify-between items-end mb-2">
+                                    <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">Overall Progress</span>
+                                    <span className="text-2xl font-bold text-white">{stats.pct.toFixed(0)}%</span>
+                                </div>
+                                <div className="h-3 w-full bg-black/40 rounded-full overflow-hidden mb-2 border border-white/5">
+                                    <div
+                                        className="h-full bg-gradient-to-r from-accent-green to-accent-blue transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                                        style={{ width: `${stats.pct}%` }}
+                                    />
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-green/20 text-accent-green border border-accent-green/20 box-shadow-green">
+                                        {stats.completed} / {stats.total} DONE
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
                         {/* Column 3: Countdown (Darker card) */}
-                        <div className="bg-bg-card/80 border border-accent-blue/20 rounded-xl p-3 min-w-[200px] shadow-[0_0_15px_-5px_rgba(59,130,246,0.3)]">
-                            <div className="flex justify-between items-center mb-2">
-                                <span className="text-[10px] font-bold text-accent-red uppercase tracking-wider">{settings.countdownSettings.title || 'Countdown'}</span>
-                            </div>
-                            <div className="flex gap-1 justify-center">
-                                {timeLeft.map((t, i) => (
-                                    <div key={i} className="flex flex-col items-center">
-                                        <div className={`w-10 h-10 rounded-lg ${i === 3 ? 'bg-accent-green' : 'bg-accent-red'} flex items-center justify-center text-white font-bold text-lg shadow-inner`}>
-                                            {t}
+                        <div className="bg-bg-card/80 border border-accent-blue/30 rounded-xl p-3 min-w-[200px] shadow-[0_0_20px_-5px_rgba(59,130,246,0.25)] flex flex-col justify-center relative group">
+                            <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 to-accent-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" />
+                            <div className="relative z-10">
+                                <div className="flex justify-between items-center mb-2">
+                                    <span className="text-[10px] font-bold text-accent-red uppercase tracking-wider">{settings.countdownSettings.title || 'Countdown'}</span>
+                                </div>
+                                <div className="flex gap-1 justify-center">
+                                    {timeLeft.map((t, i) => (
+                                        <div key={i} className="flex flex-col items-center">
+                                            <div className={`w-10 h-10 rounded-lg ${i === 3 ? 'bg-accent-green' : 'bg-accent-red'} flex items-center justify-center text-white font-bold text-lg shadow-inner`}>
+                                                {t}
+                                            </div>
+                                            <span className="text-[8px] text-gray-500 font-mono mt-1">
+                                                {['DAYS', 'HOURS', 'MINS', 'SECS'][i]}
+                                            </span>
                                         </div>
-                                        <span className="text-[8px] text-gray-500 font-mono mt-1">
-                                            {['DAYS', 'HOURS', 'MINS', 'SECS'][i]}
-                                        </span>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>

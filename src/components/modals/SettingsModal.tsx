@@ -61,31 +61,32 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="xl">
-            <div className="flex h-[500px] overflow-hidden rounded-2xl bg-bg-card border border-white/10">
+            <div className="flex flex-col md:flex-row h-[600px] md:h-[500px] overflow-hidden rounded-2xl bg-bg-card border border-white/10">
                 {/* Sidebar */}
-                <div className="w-1/3 bg-black/20 border-r border-white/5 p-4 flex flex-col gap-2">
-                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4 px-2">Settings</h3>
+                <div className="w-full md:w-64 bg-black/20 border-b md:border-b-0 md:border-r border-white/5 p-4 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible shrink-0 no-scrollbar">
+                    <h3 className="hidden md:block text-sm font-bold text-gray-500 uppercase tracking-widest mb-4 px-2">Settings</h3>
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-left ${activeTab === tab.id
+                            className={`flex items-center gap-2 md:gap-3 px-3 py-2 md:px-4 md:py-3 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${activeTab === tab.id
                                 ? 'bg-accent-blue/10 text-accent-blue border border-accent-blue/20'
                                 : 'text-gray-400 hover:text-white hover:bg-white/5'
                                 }`}
                         >
-                            <span className="text-xl">{tab.icon}</span>
-                            {tab.label}
+                            <span className="text-lg md:text-xl">{tab.icon}</span>
+                            <span className="hidden md:inline">{tab.label}</span>
+                            <span className="md:hidden">{tab.label === 'Customizations' ? 'Custom' : tab.label}</span>
                         </button>
                     ))}
 
-                    <div className="mt-auto pt-4 border-t border-white/5">
+                    <div className="hidden md:block mt-auto pt-4 border-t border-white/5">
                         <div className="px-2 mb-2 text-xs text-gray-500">StudyGoals V1.0</div>
                     </div>
                 </div>
 
                 {/* Content Area */}
-                <div className="flex-1 p-8 bg-gradient-to-br from-bg-card to-bg-card/50 overflow-y-auto">
+                <div className="flex-1 p-4 md:p-8 bg-gradient-to-br from-bg-card to-bg-card/50 overflow-y-auto custom-scrollbar">
                     {/* Account Tab */}
                     {activeTab === 'account' && (
                         <div className="space-y-6 animate-fadeIn">
