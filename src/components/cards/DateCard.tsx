@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ColumnSection } from './ColumnSection';
 import { Topic, ColumnData } from '@/types';
 import { COLUMN_HEADERS } from '@/constants';
@@ -178,8 +179,8 @@ export const DateCard: React.FC<DateCardProps> = ({
                 )}
             </div>
 
-            {/* Pull from Targets Modal */}
-            {showPullModal && (
+            {/* Pull from Targets Modal - Using Portal to escape parent transforms */}
+            {showPullModal && createPortal(
                 <div
                     className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn"
                     onClick={() => { setShowPullModal(false); setSelectedColumn(null); }}
@@ -204,8 +205,8 @@ export const DateCard: React.FC<DateCardProps> = ({
                                             key={col}
                                             onClick={() => setSelectedColumn(col)}
                                             className={`p-2.5 rounded-lg text-sm font-medium transition-all ${selectedColumn === col
-                                                    ? 'bg-accent-blue text-white'
-                                                    : 'bg-bg-hover border border-border text-gray-300 hover:border-accent-blue'
+                                                ? 'bg-accent-blue text-white'
+                                                : 'bg-bg-hover border border-border text-gray-300 hover:border-accent-blue'
                                                 }`}
                                         >
                                             {col}
@@ -258,7 +259,7 @@ export const DateCard: React.FC<DateCardProps> = ({
                         </div>
                     </div>
                 </div>
-            )}
+                , document.body)}
         </div>
     );
 };
