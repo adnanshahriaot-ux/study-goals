@@ -139,12 +139,12 @@ export const TargetCard: React.FC<TargetCardProps> = ({
                 </div>
             </div>
 
-            {/* Columns - Horizontal Grid for Desktop */}
+            {/* Columns - Responsive Grid: Single Column Mobile, 3-Col Desktop */}
             <div className="px-3 pb-2 grid grid-cols-1 md:grid-cols-3 gap-3">
                 {columns.map((col) => (
-                    <div key={col} className="bg-white/5 rounded-lg p-2 min-h-[60px]">
-                        <h4 className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">{col}</h4>
-                        <div className="space-y-1">
+                    <div key={col} className="bg-white/5 rounded-lg p-2 md:p-2 min-h-[60px]">
+                        <h4 className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide px-1 md:px-0">{col}</h4>
+                        <div className="space-y-2 md:space-y-1">
                             {(dateData[col] || []).map((topicId) => {
                                 const topic = completedTopics[topicId];
                                 if (!topic) return null;

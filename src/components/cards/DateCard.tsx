@@ -166,12 +166,12 @@ export const DateCard: React.FC<DateCardProps> = ({
                 </div>
             </div>
 
-            {/* Columns - Horizontal Grid for Desktop (4 sessions) */}
+            {/* Columns - Responsive Grid: Single Column Mobile, 4-Col Desktop */}
             <div className="p-3 grid grid-cols-1 md:grid-cols-4 gap-3">
                 {columns.map((col) => (
-                    <div key={col} className="bg-white/5 rounded-lg p-2 min-h-[60px]">
-                        <h4 className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">{col}</h4>
-                        <div className="space-y-1">
+                    <div key={col} className="bg-white/5 rounded-lg p-3 md:p-2 min-h-[60px]">
+                        <h4 className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide px-1 md:px-0">{col}</h4>
+                        <div className="space-y-2 md:space-y-1">
                             {(dateData[col] || []).map((topicId) => {
                                 const topic = completedTopics[topicId];
                                 if (!topic) return null;
