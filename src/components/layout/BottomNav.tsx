@@ -49,21 +49,25 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange }) 
     ] as const;
 
     return (
-        <div className="md:hidden fixed bottom-6 left-4 right-4 h-16 bg-bg-card/90 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-around shadow-2xl z-50 animate-slideUp">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-bg-card/95 backdrop-blur-xl border-t border-white/10 flex items-center justify-around py-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] z-50">
             {navItems.map((item) => (
                 <button
                     key={item.id}
                     onClick={() => onTabChange(item.id as TabType)}
-                    className={`flex flex-col items-center justify-center gap-1 w-full h-full rounded-2xl transition-all duration-300 ${activeTab === item.id
+                    className={`flex flex-col items-center justify-center gap-0.5 px-4 py-1.5 rounded-xl transition-all duration-300 ${activeTab === item.id
                         ? 'text-accent-blue'
                         : 'text-gray-500 hover:text-gray-300'
                         }`}
                 >
-                    <div className={`p-1 rounded-xl transition-all ${activeTab === item.id ? 'bg-accent-blue/10 scale-110' : ''}`}>
+                    <div className={`p-1.5 rounded-xl transition-all ${activeTab === item.id ? 'bg-accent-blue/15 scale-110' : ''}`}>
                         {item.icon}
                     </div>
+                    <span className={`text-[10px] font-semibold ${activeTab === item.id ? 'text-accent-blue' : 'text-gray-500'}`}>
+                        {item.label}
+                    </span>
                 </button>
             ))}
         </div>
     );
 };
+
