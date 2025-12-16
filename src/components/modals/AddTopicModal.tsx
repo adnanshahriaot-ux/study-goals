@@ -1,0 +1,135 @@
+import React, { useState } from 'react';
+import { Modal } from '@/components/common/Modal';
+import { Button } from '@/components/common/Button';
+import { Dropdown } from '@/components/common/Dropdown';
+import { useData } from '@/contexts/DataContext';
+import { COLUMN_HEADERS } from '@/constants';
+import { Topic } from '@/types';
+
+interface AddTopicModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    tableId: string;
+    date: string;
+}
+
+export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, tableId, date }) => {
+    const { settings, addTopic } = useData();
+    const [name, setName] = useState('');
+    const [timedNote, setTimedNote] = useState('');
+    const [column, setColumn] = useState(COLUMN_HEADERS[tableId as keyof typeof COLUMN_HEADERS][0]);
+    const [hardness, setHardness] = useState('medium');
+    const [studyStatus, setStudyStatus] = useState(settings.customStudyTypes[0]?.key || '');
+    const [priority, setPriority] = useState<'high' | 'medium' | 'low'>('low');
+
+    const handleSave = () => {
+        if (!name.trim()) return;
+
+        const topic: Topic = {
+            name: name.trim(),
+            note: '',
+            timedNote: timedNote.trim(),
+            progress: 0,
+            priority,
+            hardness: hardness as 'easy' | 'medium' | 'hard',
+            studyStatus
+        };
+
+        addTopic(tableId, date, column, topic);
+
+        // Reset form
+        setName('');
+        setTimedNote('');
+        setPriority('low');
+        onClose();
+    };
+
+    const columns = COLUMN_HEADERS[tableId as keyof typeof COLUMN_HEADERS];
+    const columnOptions = columns.map((c) => ({ value: c, label: c }));
+    const hardnessOptions = [
+        { value: 'easy', label: 'Easy' },
+        { value: 'medium', label: 'Medium' },
+        { value: 'hard', label: 'Hard' }
+    ];
+    const studyOptions = settings.customStudyTypes.map((t) => ({ value: t.key, label: t.name }));
+
+    return (
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            title="Add New Topic"
+            footer={
+                <div className="flex justify-end gap-3">
+                    <Button variant="secondary" onClick={onClose}>Cancel</Button>
+                    <Button onClick={handleSave} disabled={!name.trim()}>Save Topic</Button>
+                </div>
+            }
+        >
+            <div className="space-y-4">
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Topic Name</label>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full px-3 py-2 bg-bg-hover border border-border rounded-lg text-white focus:outline-none focus:border-accent-blue"
+                        placeholder="Enter topic name"
+                        autoFocus
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Timed Note</label>
+                    <input
+                        type="text"
+                        value={timedNote}
+                        onChange={(e) => setTimedNote(e.target.value)}
+                        className="w-full px-3 py-2 bg-bg-hover border border-border rounded-lg text-white focus:outline-none focus:border-accent-blue"
+                        placeholder="e.g., 30 min or 10:00 AM"
+                    />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                            {tableId === 'table1' ? 'Subject' : 'Session'}
+                        </label>
+                        <Dropdown options={columnOptions} value={column} onChange={setColumn} />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Hardness</label>
+                        <Dropdown options={hardnessOptions} value={hardness} onChange={setHardness} />
+                    </div>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Study Type</label>
+                    <Dropdown options={studyOptions} value={studyStatus} onChange={setStudyStatus} />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Priority</label>
+                    <div className="flex gap-2">
+                        {(['high', 'medium', 'low'] as const).map((p) => (
+                            <button
+                                key={p}
+                                type="button"
+                                onClick={() => setPriority(p)}
+                                className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-all ${priority === p
+                                        ? p === 'high' ? 'border-accent-red bg-accent-red/20 text-white'
+                                            : p === 'medium' ? 'border-accent-gold bg-accent-gold/20 text-white'
+                                                : 'border-border-light bg-bg-hover text-white'
+                                        : 'border-border text-gray-400 hover:border-border-light'
+                                    }`}
+                            >
+                                <span className={`w-2 h-2 rounded-full ${p === 'high' ? 'bg-accent-red' : p === 'medium' ? 'bg-accent-gold' : 'bg-gray-500'
+                                    }`} />
+                                {p.charAt(0).toUpperCase() + p.slice(1)}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </Modal>
+    );
+};
