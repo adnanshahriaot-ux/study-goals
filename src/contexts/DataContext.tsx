@@ -129,28 +129,28 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, [debouncedSave]);
 
     const deleteTopic = useCallback((topicId: string) => {
-        setCompletedTopics((prev) => {
-            const { [topicId]: _, ...rest } = prev;
-            return rest;
-        });
-
         setTableData((prev) => {
             const updated = JSON.parse(JSON.stringify(prev)) as TableData;
             (['table1', 'table2'] as const).forEach((tableId) => {
-                Object.keys(updated[tableId]).forEach((date) => {
-                    Object.keys(updated[tableId][date]).forEach((col) => {
-                        updated[tableId][date][col] = updated[tableId][date][col].filter((id) => id !== topicId);
+                Object.keys(updated[tableId]).forEach((cardId) => {
+                    Object.keys(updated[tableId][cardId]).forEach((col) => {
+                        updated[tableId][cardId][col] = updated[tableId][cardId][col].filter((id) => id !== topicId);
                     });
                 });
             });
-
-            setCompletedTopics((topics) => {
-                const { [topicId]: _, ...rest } = topics;
-                debouncedSave(updated, rest);
-                return rest;
-            });
-
             return updated;
+        });
+
+        setCompletedTopics((prev) => {
+            const { [topicId]: _, ...rest } = prev;
+            // Trigger save after both states are updated
+            setTimeout(() => {
+                setTableData(currentTableData => {
+                    debouncedSave(currentTableData, rest);
+                    return currentTableData;
+                });
+            }, 0);
+            return rest;
         });
     }, [debouncedSave]);
 
