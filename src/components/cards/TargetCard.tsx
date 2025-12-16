@@ -89,8 +89,10 @@ export const TargetCard: React.FC<TargetCardProps> = ({
                 {/* Metadata Row (Mobile: Bottom, Desktop: Right) */}
                 <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto text-xs">
                     {/* Date Range Pill */}
-                    <span className="text-gray-500 bg-white/5 px-2 py-1 rounded-md">
-                        {formatDateShort(cardMeta.startDate)} → {formatDateShort(cardMeta.endDate)}
+                    <span className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-accent-purple/10 text-accent-purple border border-accent-purple/20 shadow-[0_0_10px_-3px_rgba(168,85,247,0.3)] flex items-center gap-1.5">
+                        <span className="text-white/70">{formatDateShort(cardMeta.startDate)}</span>
+                        <span className="text-accent-purple">→</span>
+                        <span className="text-white">{formatDateShort(cardMeta.endDate)}</span>
                     </span>
 
                     <div className="flex items-center gap-2">
