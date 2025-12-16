@@ -194,6 +194,11 @@ export const DateCard: React.FC<DateCardProps> = ({
                                                     {topic.note}
                                                 </span>
                                             )}
+                                            {topic.estimatedTime && (
+                                                <span className="text-[10px] text-accent-purple truncate font-mono flex items-center gap-1 mt-0.5">
+                                                    <span className="text-xs">⏰</span> {topic.estimatedTime}
+                                                </span>
+                                            )}
                                         </div>
                                         <span
                                             className={`text-xs font-mono font-medium ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}

@@ -7,6 +7,7 @@ export interface Topic {
     priority: 'high' | 'medium' | 'low';
     hardness: 'easy' | 'medium' | 'hard';
     studyStatus: string;
+    estimatedTime?: string;
 }
 
 export type CompletedTopics = Record<string, Topic>;

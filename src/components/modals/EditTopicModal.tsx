@@ -16,6 +16,7 @@ export const EditTopicModal: React.FC<EditTopicModalProps> = ({ isOpen, onClose,
 
     const [name, setName] = useState('');
     const [timedNote, setTimedNote] = useState('');
+    const [estimatedTime, setEstimatedTime] = useState('');
     const [note, setNote] = useState('');
     const [hardness, setHardness] = useState('medium');
     const [studyStatus, setStudyStatus] = useState('');
@@ -26,6 +27,7 @@ export const EditTopicModal: React.FC<EditTopicModalProps> = ({ isOpen, onClose,
             const topic = completedTopics[topicId];
             setName(topic.name);
             setTimedNote(topic.timedNote || '');
+            setEstimatedTime(topic.estimatedTime || '');
             setNote(topic.note || '');
             setHardness(topic.hardness);
             setStudyStatus(topic.studyStatus);
@@ -39,6 +41,7 @@ export const EditTopicModal: React.FC<EditTopicModalProps> = ({ isOpen, onClose,
         updateTopic(topicId, {
             name: name.trim(),
             timedNote: timedNote.trim(),
+            estimatedTime: estimatedTime.trim(),
             note: note.trim(),
             hardness: hardness as 'easy' | 'medium' | 'hard',
             studyStatus,
@@ -88,6 +91,17 @@ export const EditTopicModal: React.FC<EditTopicModalProps> = ({ isOpen, onClose,
                         value={timedNote}
                         onChange={(e) => setTimedNote(e.target.value)}
                         className="w-full px-3 py-2 bg-bg-hover border border-border rounded-lg text-white focus:outline-none focus:border-accent-blue"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Estimated Time</label>
+                    <input
+                        type="text"
+                        value={estimatedTime}
+                        onChange={(e) => setEstimatedTime(e.target.value)}
+                        className="w-full px-3 py-2 bg-bg-hover border border-border rounded-lg text-white focus:outline-none focus:border-accent-blue"
+                        placeholder="e.g., 11 am - 9 pm"
                     />
                 </div>
 

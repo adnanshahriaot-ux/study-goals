@@ -17,6 +17,7 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
     const { settings, addTopic } = useData();
     const [name, setName] = useState('');
     const [timedNote, setTimedNote] = useState('');
+    const [estimatedTime, setEstimatedTime] = useState('');
     const [column, setColumn] = useState(COLUMN_HEADERS[tableId as keyof typeof COLUMN_HEADERS][0]);
     const [hardness, setHardness] = useState('medium');
     const [studyStatus, setStudyStatus] = useState(settings.customStudyTypes[0]?.key || '');
@@ -29,6 +30,7 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
             name: name.trim(),
             note: '',
             timedNote: timedNote.trim(),
+            estimatedTime: estimatedTime.trim(),
             progress: 0,
             priority,
             hardness: hardness as 'easy' | 'medium' | 'hard',
@@ -40,6 +42,7 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
         // Reset form
         setName('');
         setTimedNote('');
+        setEstimatedTime('');
         setPriority('low');
         onClose();
     };
@@ -89,6 +92,17 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
                     />
                 </div>
 
+                <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Estimated Time (Optional)</label>
+                    <input
+                        type="text"
+                        value={estimatedTime}
+                        onChange={(e) => setEstimatedTime(e.target.value)}
+                        className="w-full px-3 py-2 bg-bg-hover border border-border rounded-lg text-white focus:outline-none focus:border-accent-blue"
+                        placeholder="e.g., 11 am - 9 pm"
+                    />
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -116,10 +130,10 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
                                 type="button"
                                 onClick={() => setPriority(p)}
                                 className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-all ${priority === p
-                                        ? p === 'high' ? 'border-accent-red bg-accent-red/20 text-white'
-                                            : p === 'medium' ? 'border-accent-gold bg-accent-gold/20 text-white'
-                                                : 'border-border-light bg-bg-hover text-white'
-                                        : 'border-border text-gray-400 hover:border-border-light'
+                                    ? p === 'high' ? 'border-accent-red bg-accent-red/20 text-white'
+                                        : p === 'medium' ? 'border-accent-gold bg-accent-gold/20 text-white'
+                                            : 'border-border-light bg-bg-hover text-white'
+                                    : 'border-border text-gray-400 hover:border-border-light'
                                     }`}
                             >
                                 <span className={`w-2 h-2 rounded-full ${p === 'high' ? 'bg-accent-red' : p === 'medium' ? 'bg-accent-gold' : 'bg-gray-500'
