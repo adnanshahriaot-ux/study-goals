@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode, useRef } from 'react';
-import { AppSettings, TableData, CompletedTopics, Topic } from '@/types';
+import { AppSettings, TableData, CompletedTopics, Topic, TargetCardMeta } from '@/types';
 import { DEFAULT_SETTINGS, DEFAULT_TABLE_DATA } from '@/constants';
 import { subscribeToData, subscribeToSettings, saveData, saveSettings } from '@/services/data.service';
 import { useAuth } from './AuthContext';
@@ -17,6 +17,8 @@ interface DataContextType {
     updateSettings: (newSettings: AppSettings) => void;
     addCard: (tableId: 'table1' | 'table2', date: string) => void;
     deleteCard: (tableId: string, date: string) => void;
+    addTargetCard: (title: string, startDate: string, endDate: string) => string;
+    deleteTargetCard: (cardId: string) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -95,20 +97,21 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         });
     }, [tableData, debouncedSave]);
 
-    const addTopic = useCallback((tableId: string, date: string, column: string, topic: Topic): string => {
+    const addTopic = useCallback((tableId: string, cardId: string, column: string, topic: Topic): string => {
         const topicId = `topic_${Date.now().toString(36)}${Math.random().toString(36).substr(2, 9)}`;
+        const table = tableId as 'table1' | 'table2';
 
         setCompletedTopics((prev) => ({ ...prev, [topicId]: topic }));
         setTableData((prev) => {
             const updated = { ...prev };
-            if (!updated[tableId as keyof TableData][date]) {
-                updated[tableId as keyof TableData][date] = {};
+            if (!updated[table][cardId]) {
+                updated[table][cardId] = {};
             }
-            if (!updated[tableId as keyof TableData][date][column]) {
-                updated[tableId as keyof TableData][date][column] = [];
+            if (!updated[table][cardId][column]) {
+                updated[table][cardId][column] = [];
             }
-            updated[tableId as keyof TableData][date][column] = [
-                ...updated[tableId as keyof TableData][date][column],
+            updated[table][cardId][column] = [
+                ...updated[table][cardId][column],
                 topicId
             ];
 
@@ -174,10 +177,38 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         });
     }, [completedTopics, debouncedSave]);
 
-    const deleteCard = useCallback((tableId: string, date: string) => {
+    const addTargetCard = useCallback((title: string, startDate: string, endDate: string): string => {
+        const cardId = `target_${Date.now().toString(36)}${Math.random().toString(36).substr(2, 5)}`;
+        const newCard: TargetCardMeta = { id: cardId, title, startDate, endDate };
+
+        setTableData((prev) => {
+            const updated = {
+                ...prev,
+                table1: { ...prev.table1, [cardId]: {} },
+                targetCards: [...(prev.targetCards || []), newCard]
+            };
+            debouncedSave(updated, completedTopics);
+            return updated;
+        });
+
+        return cardId;
+    }, [completedTopics, debouncedSave]);
+
+    const deleteTargetCard = useCallback((cardId: string) => {
         setTableData((prev) => {
             const updated = JSON.parse(JSON.stringify(prev)) as TableData;
-            delete updated[tableId as keyof TableData][date];
+            delete updated.table1[cardId];
+            updated.targetCards = (updated.targetCards || []).filter(c => c.id !== cardId);
+            debouncedSave(updated, completedTopics);
+            return updated;
+        });
+    }, [completedTopics, debouncedSave]);
+
+    const deleteCard = useCallback((tableId: string, cardId: string) => {
+        const table = tableId as 'table1' | 'table2';
+        setTableData((prev) => {
+            const updated = JSON.parse(JSON.stringify(prev)) as TableData;
+            delete updated[table][cardId];
             debouncedSave(updated, completedTopics);
             return updated;
         });
@@ -186,7 +217,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return (
         <DataContext.Provider value={{
             tableData, completedTopics, settings, isLoading,
-            updateTopic, addTopic, deleteTopic, updateTableData, updateSettings, addCard, deleteCard
+            updateTopic, addTopic, deleteTopic, updateTableData, updateSettings, addCard, deleteCard,
+            addTargetCard, deleteTargetCard
         }}>
             {children}
         </DataContext.Provider>

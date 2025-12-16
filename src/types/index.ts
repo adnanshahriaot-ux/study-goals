@@ -11,12 +11,23 @@ export interface Topic {
 
 export type CompletedTopics = Record<string, Topic>;
 
+// Target Card Metadata (for long-term targets with date ranges)
+export interface TargetCardMeta {
+    id: string;
+    title: string;
+    startDate: string; // Format: YYYY-MM-DD
+    endDate: string;   // Format: YYYY-MM-DD
+    color?: string;    // Optional accent color
+}
+
 // Table Data Types
 export type ColumnData = Record<string, string[]>;
 export type DateData = Record<string, ColumnData>;
+
 export interface TableData {
     table1: DateData;
     table2: DateData;
+    targetCards?: TargetCardMeta[]; // Metadata for Target cards
 }
 
 // Settings Types

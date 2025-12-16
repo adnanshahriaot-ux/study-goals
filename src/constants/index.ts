@@ -35,7 +35,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
 
 export const DEFAULT_TABLE_DATA: TableData = {
     table1: {},
-    table2: {}
+    table2: {},
+    targetCards: []
 };
 
 export const STUDY_TYPE_CLASSES: Record<string, string> = {
