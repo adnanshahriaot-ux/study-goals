@@ -89,10 +89,42 @@ export const Dashboard: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-bg-primary">
-            <div className="max-w-4xl mx-auto px-4 py-6">
-                <Header onSettingsClick={() => setShowSettings(true)} onCalendarClick={() => setShowCalendar(true)} />
+            <div className="max-w-7xl mx-auto px-4 py-6">
+                {/* Horizontal Header Row: Logo + Progress + Countdown */}
+                <div className="flex flex-col lg:flex-row items-center gap-4 mb-6">
+                    {/* Logo + Icons */}
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-2xl font-bold text-white">
+                            Study<span className="bg-gradient-to-r from-accent-green to-accent-blue bg-clip-text text-transparent">Goals</span>
+                        </h1>
+                        <button
+                            onClick={() => setShowCalendar(true)}
+                            className="p-2 bg-bg-hover border border-border rounded-lg text-gray-400 hover:text-white transition-all"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" strokeWidth={2} />
+                                <line x1="3" y1="10" x2="21" y2="10" strokeWidth={2} />
+                            </svg>
+                        </button>
+                        <button
+                            onClick={() => setShowSettings(true)}
+                            className="p-2 bg-bg-hover border border-border rounded-lg text-gray-400 hover:text-white transition-all"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="3" strokeWidth={2} />
+                                <path strokeWidth={2} d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.17-2.82H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 2.82-1.17V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1.08 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.17 2.82H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1.08z" />
+                            </svg>
+                        </button>
+                    </div>
 
-                <ProgressBar percentage={stats.pct} completed={stats.completed} total={stats.total} />
+                    {/* Progress Bar - Flex Grow */}
+                    <div className="flex-1 w-full lg:w-auto">
+                        <ProgressBar percentage={stats.pct} completed={stats.completed} total={stats.total} />
+                    </div>
+
+                    {/* Countdown - from Header component */}
+                    <Header onSettingsClick={() => setShowSettings(true)} onCalendarClick={() => setShowCalendar(true)} />
+                </div>
 
                 {/* View Toggle */}
                 <div className="flex justify-center my-6">
@@ -126,20 +158,22 @@ export const Dashboard: React.FC = () => {
                             </div>
                         ) : (
                             <>
-                                {sortedTargetCards.map((card) => (
-                                    <TargetCard
-                                        key={card.id}
-                                        cardMeta={card}
-                                        dateData={tableData.table1[card.id] || {}}
-                                        completedTopics={completedTopics}
-                                        onAddTopic={(tId, cId) => setAddTopicInfo({ tableId: tId, cardId: cId })}
-                                        onEditTopic={(id) => setEditTopicId(id)}
-                                        onDeleteCard={handleDeleteTarget}
-                                    />
-                                ))}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    {sortedTargetCards.map((card) => (
+                                        <TargetCard
+                                            key={card.id}
+                                            cardMeta={card}
+                                            dateData={tableData.table1[card.id] || {}}
+                                            completedTopics={completedTopics}
+                                            onAddTopic={(tId, cId) => setAddTopicInfo({ tableId: tId, cardId: cId })}
+                                            onEditTopic={(id) => setEditTopicId(id)}
+                                            onDeleteCard={handleDeleteTarget}
+                                        />
+                                    ))}
+                                </div>
                                 <button
                                     onClick={() => setShowCreateTarget(true)}
-                                    className="w-full py-4 border-2 border-dashed border-white/20 rounded-2xl text-gray-400 font-semibold hover:text-accent-purple hover:border-accent-purple hover:bg-accent-purple/5 transition-all mb-4"
+                                    className="w-full py-4 border-2 border-dashed border-white/20 rounded-2xl text-gray-400 font-semibold hover:text-accent-purple hover:border-accent-purple hover:bg-accent-purple/5 transition-all mt-4"
                                 >
                                     + Create New Target
                                 </button>
@@ -163,19 +197,21 @@ export const Dashboard: React.FC = () => {
                                 </button>
                             </div>
                         ) : (
-                            sortedDailyDates.map((date) => (
-                                <DateCard
-                                    key={date}
-                                    tableId="table2"
-                                    date={date}
-                                    dateData={tableData.table2[date]}
-                                    completedTopics={completedTopics}
-                                    onAddTopic={(tId, d) => setAddTopicInfo({ tableId: tId, cardId: d })}
-                                    onEditTopic={(id) => setEditTopicId(id)}
-                                    onDeleteCard={(tId, d) => setDeleteConfirm({ tableId: tId, cardId: d })}
-                                    onDateChange={handleDateChange}
-                                />
-                            ))
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                {sortedDailyDates.map((date) => (
+                                    <DateCard
+                                        key={date}
+                                        tableId="table2"
+                                        date={date}
+                                        dateData={tableData.table2[date]}
+                                        completedTopics={completedTopics}
+                                        onAddTopic={(tId, d) => setAddTopicInfo({ tableId: tId, cardId: d })}
+                                        onEditTopic={(id) => setEditTopicId(id)}
+                                        onDeleteCard={(tId, d) => setDeleteConfirm({ tableId: tId, cardId: d })}
+                                        onDateChange={handleDateChange}
+                                    />
+                                ))}
+                            </div>
                         )}
                     </>
                 )}
