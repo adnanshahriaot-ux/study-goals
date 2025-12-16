@@ -182,12 +182,19 @@ export const DateCard: React.FC<DateCardProps> = ({
                                         className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group flex items-center gap-2 cursor-pointer relative pr-8"
                                     >
                                         <div
-                                            className={`w-3 h-3 rounded-full flex-shrink-0 transition-colors ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
+                                            className={`w-3 h-3 rounded-full flex-shrink-0 transition-colors mt-1 ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
                                                 } ${topic.progress > 0 && topic.progress < 100 ? 'border-2 border-accent-blue bg-transparent' : ''}`}
                                         />
-                                        <span className={`text-sm flex-1 truncate ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
-                                            {topic.name}
-                                        </span>
+                                        <div className="flex-1 min-w-0 flex flex-col">
+                                            <span className={`text-sm truncate ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
+                                                {topic.name}
+                                            </span>
+                                            {topic.note && (
+                                                <span className="text-[10px] text-gray-500 truncate italic">
+                                                    {topic.note}
+                                                </span>
+                                            )}
+                                        </div>
                                         <span
                                             className={`text-xs font-mono font-medium ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}
                                         >
