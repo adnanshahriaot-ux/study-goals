@@ -14,20 +14,25 @@ export const ColumnSection: React.FC<ColumnSectionProps> = ({
     columnName,
     topicIds,
     completedTopics,
-    tableId,
     onEditTopic
 }) => {
-    const colorClass = tableId === 'table1'
-        ? 'bg-accent-green/20 text-accent-green border-accent-green'
-        : 'bg-accent-blue/20 text-accent-blue border-accent-blue';
+    // Only render if there are topics
+    if (topicIds.length === 0) return null;
 
     return (
-        <div className="py-2 px-4 border-b border-border last:border-b-0">
-            <span className={`inline-block text-xs font-bold uppercase tracking-wide px-2 py-1 rounded border mb-2 ${colorClass}`}>
-                {columnName}
-            </span>
+        <div className="py-2">
+            {/* Column Header */}
+            <div className="flex items-center gap-2 mb-2 px-1">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                    {columnName}
+                </span>
+                <span className="text-xs text-gray-600 bg-white/5 px-2 py-0.5 rounded-full">
+                    {topicIds.length}
+                </span>
+            </div>
 
-            <div className="space-y-1">
+            {/* Topics */}
+            <div className="space-y-2">
                 {topicIds.map((topicId) => {
                     const topic = completedTopics[topicId];
                     if (!topic) return null;
