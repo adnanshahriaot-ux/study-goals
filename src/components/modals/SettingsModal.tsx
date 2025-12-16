@@ -89,23 +89,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 <div className="flex-1 p-4 md:p-8 bg-gradient-to-br from-bg-card to-bg-card/50 overflow-y-auto custom-scrollbar">
                     {/* Account Tab */}
                     {activeTab === 'account' && (
-                        <div className="space-y-6 animate-fadeIn">
-                            <h2 className="text-2xl font-bold text-white">My Account</h2>
+                        <div className="space-y-4 animate-fadeIn">
+                            <h2 className="text-xl md:text-2xl font-bold text-white">My Account</h2>
 
-                            <div className="flex items-center gap-5 p-6 bg-white/5 rounded-2xl border border-white/10">
-                                <div className="w-16 h-16 bg-gradient-to-tr from-accent-purple to-accent-blue rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-accent-purple/20">
+                            <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
+                                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-tr from-accent-purple to-accent-blue rounded-full flex items-center justify-center text-white text-xl md:text-3xl font-bold shadow-lg shadow-accent-purple/20">
                                     {user?.displayName?.[0]?.toUpperCase() || 'U'}
                                 </div>
                                 <div>
-                                    <div className="text-xl font-bold text-white">{user?.displayName}</div>
-                                    <div className="text-gray-400">{user?.email}</div>
-                                    <div className="text-xs text-green-400 mt-1 flex items-center gap-1">
-                                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" /> Active Session
+                                    <div className="text-lg md:text-xl font-bold text-white">{user?.displayName}</div>
+                                    <div className="text-sm text-gray-400">{user?.email}</div>
+                                    <div className="text-[10px] md:text-xs text-green-400 mt-1 flex items-center gap-1">
+                                        <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-400 animate-pulse" /> Active Session
                                     </div>
                                 </div>
                             </div>
 
-                            <Button variant="danger" onClick={logout} className="w-full py-4 rounded-xl text-base font-semibold border border-red-500/20 hover:bg-red-500/10">
+                            <Button variant="danger" onClick={logout} className="w-full py-3 rounded-xl text-sm md:text-base font-semibold border border-red-500/20 hover:bg-red-500/10">
                                 Sign Out
                             </Button>
                         </div>
