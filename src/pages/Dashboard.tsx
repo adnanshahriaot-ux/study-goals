@@ -130,96 +130,81 @@ export const Dashboard: React.FC = () => {
                 {/* HEADER REDESIGN */}
                 <div className="mb-6">
                     {/* MOBILE LAYOUT (md:hidden) - Tab-based Native App Experience */}
-                    <div className="block md:hidden pb-24">
+                    <div className="block md:hidden pb-16">
                         {/* DASHBOARD TAB */}
                         {activeMobileTab === 'dashboard' && (
-                            <div className="space-y-3 animate-fadeIn">
-                                {/* Header - Compact */}
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="w-10 h-10 bg-gradient-to-tr from-accent-purple to-accent-blue rounded-xl flex items-center justify-center text-xl shadow-lg shadow-accent-purple/20">
-                                            🎓
-                                        </div>
-                                        <div>
-                                            <h1 className="text-xl font-bold text-white">
-                                                Study<span className="bg-gradient-to-r from-accent-green to-accent-blue bg-clip-text text-transparent">Goals</span>
-                                            </h1>
-                                            <p className="text-[10px] text-gray-400">Welcome, {user?.displayName?.split(' ')[0] || 'Student'}</p>
-                                        </div>
+                            <div className="space-y-2 animate-fadeIn">
+                                {/* Header - Ultra Compact */}
+                                <div className="flex items-center gap-2">
+                                    <div className="w-8 h-8 bg-gradient-to-tr from-accent-purple to-accent-blue rounded-lg flex items-center justify-center text-base shadow-lg shadow-accent-purple/20">
+                                        🎓
+                                    </div>
+                                    <div>
+                                        <h1 className="text-base font-bold text-white leading-tight">
+                                            Study<span className="bg-gradient-to-r from-accent-green to-accent-blue bg-clip-text text-transparent">Goals</span>
+                                        </h1>
+                                        <p className="text-[9px] text-gray-400">Welcome, {user?.displayName?.split(' ')[0] || 'Student'}</p>
                                     </div>
                                 </div>
 
-                                {/* Progress Card - Compact */}
-                                <div className="glass-card p-3 rounded-xl border border-accent-green/20 bg-gradient-to-br from-emerald-900/20 to-slate-800/50 relative overflow-hidden">
-                                    <div className="relative z-10">
-                                        <div className="flex justify-between items-center mb-2">
-                                            <div>
-                                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Progress</span>
-                                                <div className="flex items-baseline gap-1.5">
-                                                    <span className="text-2xl font-black text-white">{stats.pct.toFixed(0)}%</span>
-                                                    <span className="text-[10px] text-gray-500">{stats.completed}/{stats.total}</span>
-                                                </div>
-                                            </div>
-                                            <div className="p-2 bg-accent-green/20 rounded-lg text-accent-green">
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                            </div>
+                                {/* Progress Card - Ultra Compact */}
+                                <div className="glass-card p-2 rounded-lg border border-accent-green/20 bg-gradient-to-br from-emerald-900/20 to-slate-800/50">
+                                    <div className="flex justify-between items-center mb-1.5">
+                                        <div className="flex items-baseline gap-1">
+                                            <span className="text-xl font-black text-white">{stats.pct.toFixed(0)}%</span>
+                                            <span className="text-[9px] text-gray-500">{stats.completed}/{stats.total}</span>
                                         </div>
-                                        <div className="h-2 bg-gray-700/30 rounded-full overflow-hidden">
-                                            <div
-                                                className="h-full bg-gradient-to-r from-accent-green via-emerald-400 to-teal-400 transition-all duration-1000 ease-out"
-                                                style={{ width: `${stats.pct}%` }}
-                                            />
-                                        </div>
+                                        <span className="text-[9px] font-bold text-accent-green uppercase">Progress</span>
+                                    </div>
+                                    <div className="h-1.5 bg-gray-700/30 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-gradient-to-r from-accent-green via-emerald-400 to-teal-400 transition-all duration-1000 ease-out"
+                                            style={{ width: `${stats.pct}%` }}
+                                        />
                                     </div>
                                 </div>
 
-                                {/* Countdown Card - Compact */}
-                                <div className="glass-card p-3 rounded-xl border border-accent-blue/20 bg-gradient-to-br from-blue-900/30 via-slate-800/50 to-purple-900/30">
-                                    <div className="flex justify-between items-center mb-2">
-                                        <div>
-                                            <span className="text-[10px] font-bold text-accent-blue uppercase tracking-wider">{settings.countdownSettings.title || 'Countdown'}</span>
-                                            <p className="text-[9px] text-gray-500">{settings.countdownSettings.targetDate}</p>
-                                        </div>
+                                {/* Countdown Card - Ultra Compact */}
+                                <div className="glass-card p-2 rounded-lg border border-accent-blue/20 bg-gradient-to-br from-blue-900/30 via-slate-800/50 to-purple-900/30">
+                                    <div className="flex justify-between items-center mb-1.5">
+                                        <span className="text-[9px] font-bold text-accent-blue uppercase">{settings.countdownSettings.title || 'Countdown'}</span>
+                                        <span className="text-[8px] text-gray-500">{settings.countdownSettings.targetDate}</span>
                                     </div>
-                                    <div className="grid grid-cols-4 gap-1.5">
+                                    <div className="grid grid-cols-4 gap-1">
                                         {timeLeft.map((t, i) => (
                                             <div key={i} className="flex flex-col items-center">
-                                                <div className={`w-full py-2 rounded-lg flex items-center justify-center ${i === 3 ? 'bg-accent-green/20' : 'bg-white/5'}`}>
-                                                    <span className={`text-lg font-black ${i === 3 ? 'text-accent-green' : 'text-white'}`}>{t}</span>
+                                                <div className={`w-full py-1.5 rounded-md flex items-center justify-center ${i === 3 ? 'bg-accent-green/20' : 'bg-white/5'}`}>
+                                                    <span className={`text-sm font-black ${i === 3 ? 'text-accent-green' : 'text-white'}`}>{t}</span>
                                                 </div>
-                                                <span className="text-[8px] font-bold text-gray-500 uppercase mt-1">
-                                                    {['Days', 'Hrs', 'Min', 'Sec'][i]}
+                                                <span className="text-[7px] font-bold text-gray-500 uppercase mt-0.5">
+                                                    {['D', 'H', 'M', 'S'][i]}
                                                 </span>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
 
-                                {/* Quick Actions - Compact */}
-                                <div className="grid grid-cols-2 gap-2">
+                                {/* Quick Actions - Ultra Compact */}
+                                <div className="grid grid-cols-2 gap-1.5">
                                     <button
                                         onClick={() => setActiveMobileTab('targets')}
-                                        className="glass-card p-3 rounded-xl border border-accent-purple/20 hover:border-accent-purple/40 transition-all group text-left"
+                                        className="glass-card p-2 rounded-lg border border-accent-purple/20 hover:border-accent-purple/40 transition-all group"
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-xl">🎯</span>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="text-base">🎯</span>
                                             <div>
-                                                <span className="text-xs font-bold text-white group-hover:text-accent-purple transition-colors block">Targets</span>
-                                                <span className="text-[10px] text-gray-500">{sortedTargetCards.length} active</span>
+                                                <span className="text-[10px] font-bold text-white block">{sortedTargetCards.length} Targets</span>
                                             </div>
                                         </div>
                                     </button>
                                     <button
                                         onClick={() => setActiveMobileTab('daily')}
-                                        className="glass-card p-3 rounded-xl border border-accent-cyan/20 hover:border-accent-cyan/40 transition-all group text-left"
+                                        className="glass-card p-2 rounded-lg border border-accent-cyan/20 hover:border-accent-cyan/40 transition-all group"
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-xl">📅</span>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="text-base">📅</span>
                                             <div>
-                                                <span className="text-xs font-bold text-white group-hover:text-accent-cyan transition-colors block">Daily</span>
-                                                <span className="text-[10px] text-gray-500">{sortedDailyDates.length} days</span>
+                                                <span className="text-[10px] font-bold text-white block">{sortedDailyDates.length} Days</span>
                                             </div>
                                         </div>
                                     </button>

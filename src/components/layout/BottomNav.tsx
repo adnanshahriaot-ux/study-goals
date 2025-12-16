@@ -49,20 +49,22 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange }) 
     ] as const;
 
     return (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-bg-card/95 backdrop-blur-xl border-t border-white/10 flex items-center justify-around py-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] z-50">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-bg-card/95 backdrop-blur-xl border-t border-white/10 flex items-center justify-around py-1 pb-[calc(0.25rem+env(safe-area-inset-bottom))] z-50">
             {navItems.map((item) => (
                 <button
                     key={item.id}
                     onClick={() => onTabChange(item.id as TabType)}
-                    className={`flex flex-col items-center justify-center gap-0.5 px-4 py-1.5 rounded-xl transition-all duration-300 ${activeTab === item.id
+                    className={`flex flex-col items-center justify-center gap-0 px-3 py-1 rounded-lg transition-all duration-300 ${activeTab === item.id
                         ? 'text-accent-blue'
                         : 'text-gray-500 hover:text-gray-300'
                         }`}
                 >
-                    <div className={`p-1.5 rounded-xl transition-all ${activeTab === item.id ? 'bg-accent-blue/15 scale-110' : ''}`}>
-                        {item.icon}
+                    <div className={`p-1 rounded-lg transition-all ${activeTab === item.id
+                        ? 'bg-accent-blue/20 shadow-[0_0_12px_rgba(59,130,246,0.5)] scale-105'
+                        : ''}`}>
+                        {React.cloneElement(item.icon, { className: 'w-5 h-5' })}
                     </div>
-                    <span className={`text-[10px] font-semibold ${activeTab === item.id ? 'text-accent-blue' : 'text-gray-500'}`}>
+                    <span className={`text-[9px] font-semibold ${activeTab === item.id ? 'text-accent-blue' : 'text-gray-500'}`}>
                         {item.label}
                     </span>
                 </button>
