@@ -170,23 +170,34 @@ export const DateCard: React.FC<DateCardProps> = ({
                                 return (
                                     <div
                                         key={topicId}
-                                        onClick={() => onEditTopic(topicId)}
-                                        className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group flex items-center gap-2 cursor-pointer"
+                                        onClick={(e) => handleProgressClick(e, topic, topicId)}
+                                        className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group flex items-center gap-2 cursor-pointer relative pr-8"
                                     >
-                                        <button
-                                            onClick={(e) => handleProgressClick(e, topic, topicId)}
-                                            className={`w-3 h-3 rounded-full flex-shrink-0 transition-colors ${topic.progress === 100 ? 'bg-green-500 hover:bg-green-400' : 'bg-gray-600 hover:bg-gray-500'
+                                        <div
+                                            className={`w-3 h-3 rounded-full flex-shrink-0 transition-colors ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
                                                 } ${topic.progress > 0 && topic.progress < 100 ? 'border-2 border-accent-blue bg-transparent' : ''}`}
-                                            title="Click to cycle progress"
                                         />
-                                        <span className={`text-sm text-white truncate flex-1 ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
+                                        <span className={`text-sm flex-1 truncate ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
                                             {topic.name}
                                         </span>
-                                        <button
-                                            onClick={(e) => handleProgressClick(e, topic, topicId)}
-                                            className={`text-xs text-gray-500 font-mono hover:text-white ${topic.progress === 100 ? 'text-green-500' : ''}`}
+                                        <span
+                                            className={`text-xs font-mono font-medium ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}
                                         >
                                             {topic.progress}%
+                                        </span>
+
+                                        {/* Edit Pencil - Hover Only */}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onEditTopic(topicId);
+                                            }}
+                                            className="opacity-0 group-hover:opacity-100 absolute right-2 p-1 text-gray-400 hover:text-accent-blue bg-bg-card/80 rounded transition-all"
+                                            title="Edit details"
+                                        >
+                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
                                         </button>
                                     </div>
                                 );
