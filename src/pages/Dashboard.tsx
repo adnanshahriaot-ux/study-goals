@@ -49,7 +49,7 @@ export const Dashboard: React.FC = () => {
 
         // Collect IDs from Target Cards
         (tableData.targetCards || []).forEach(card => {
-            Object.values(card.data).forEach(columnTopics => {
+            Object.values(card.data || {}).forEach(columnTopics => {
                 columnTopics.forEach(id => activeTopicIds.add(id));
             });
         });
