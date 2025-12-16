@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { ColumnSection } from './ColumnSection';
 import { Topic, ColumnData, TargetCardMeta } from '@/types';
 import { COLUMN_HEADERS } from '@/constants';
 
@@ -71,18 +70,18 @@ export const TargetCard: React.FC<TargetCardProps> = ({
 
                 {/* Days Badge */}
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg ${daysInfo.daysRemaining <= 3
-                        ? 'bg-red-500/20 text-red-400'
-                        : daysInfo.daysRemaining <= 7
-                            ? 'bg-yellow-500/20 text-yellow-400'
-                            : 'bg-accent-blue/20 text-accent-blue'
+                    ? 'bg-red-500/20 text-red-400'
+                    : daysInfo.daysRemaining <= 7
+                        ? 'bg-yellow-500/20 text-yellow-400'
+                        : 'bg-accent-blue/20 text-accent-blue'
                     }`}>
                     {daysInfo.daysRemaining}d
                 </span>
 
                 {/* Progress Badge */}
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg ${percentage === 100
-                        ? 'bg-green-500/20 text-green-400'
-                        : 'bg-white/10 text-gray-300'
+                    ? 'bg-green-500/20 text-green-400'
+                    : 'bg-white/10 text-gray-300'
                     }`}>
                     {completedCount}/{totalTopics}
                 </span>
@@ -112,21 +111,36 @@ export const TargetCard: React.FC<TargetCardProps> = ({
                 </div>
             </div>
 
-            {/* Columns - Collapsible */}
-            {totalTopics > 0 && (
-                <div className="px-3 pb-2 space-y-1">
-                    {columns.map((col) => (
-                        <ColumnSection
-                            key={col}
-                            columnName={col}
-                            topicIds={dateData[col] || []}
-                            completedTopics={completedTopics}
-                            tableId="table1"
-                            onEditTopic={onEditTopic}
-                        />
-                    ))}
-                </div>
-            )}
+            {/* Columns - Horizontal Grid for Desktop */}
+            <div className="px-3 pb-2 grid grid-cols-1 md:grid-cols-3 gap-3">
+                {columns.map((col) => (
+                    <div key={col} className="bg-white/5 rounded-lg p-2 min-h-[60px]">
+                        <h4 className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">{col}</h4>
+                        <div className="space-y-1">
+                            {(dateData[col] || []).map((topicId) => {
+                                const topic = completedTopics[topicId];
+                                if (!topic) return null;
+                                return (
+                                    <button
+                                        key={topicId}
+                                        onClick={() => onEditTopic(topicId)}
+                                        className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <span className={`w-2 h-2 rounded-full ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-500'}`} />
+                                            <span className="text-sm text-white truncate flex-1">{topic.name}</span>
+                                            <span className="text-xs text-gray-500">{topic.progress}%</span>
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                            {(dateData[col] || []).length === 0 && (
+                                <p className="text-xs text-gray-600 italic">No topics</p>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
 
             {/* Add Topic Button */}
             <div className="px-3 pb-3">

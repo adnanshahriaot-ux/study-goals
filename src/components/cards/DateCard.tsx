@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ColumnSection } from './ColumnSection';
 import { Topic, ColumnData } from '@/types';
 import { COLUMN_HEADERS } from '@/constants';
 import { useData } from '@/contexts/DataContext';
@@ -145,17 +144,34 @@ export const DateCard: React.FC<DateCardProps> = ({
                 </button>
             </div>
 
-            {/* Columns */}
-            <div className="p-4 space-y-1">
+            {/* Columns - Horizontal Grid for Desktop (4 sessions) */}
+            <div className="p-3 grid grid-cols-1 md:grid-cols-4 gap-3">
                 {columns.map((col) => (
-                    <ColumnSection
-                        key={col}
-                        columnName={col}
-                        topicIds={dateData[col] || []}
-                        completedTopics={completedTopics}
-                        tableId={tableId}
-                        onEditTopic={onEditTopic}
-                    />
+                    <div key={col} className="bg-white/5 rounded-lg p-2 min-h-[60px]">
+                        <h4 className="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wide">{col}</h4>
+                        <div className="space-y-1">
+                            {(dateData[col] || []).map((topicId) => {
+                                const topic = completedTopics[topicId];
+                                if (!topic) return null;
+                                return (
+                                    <button
+                                        key={topicId}
+                                        onClick={() => onEditTopic(topicId)}
+                                        className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <span className={`w-2 h-2 rounded-full ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-500'}`} />
+                                            <span className="text-sm text-white truncate flex-1">{topic.name}</span>
+                                            <span className="text-xs text-gray-500">{topic.progress}%</span>
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                            {(dateData[col] || []).length === 0 && (
+                                <p className="text-xs text-gray-600 italic">No topics</p>
+                            )}
+                        </div>
+                    </div>
                 ))}
             </div>
 
