@@ -19,7 +19,7 @@ export const DateCard: React.FC<DateCardProps> = ({
     tableId, date, dateData, completedTopics,
     onAddTopic, onEditTopic, onDeleteCard, onDateChange
 }) => {
-    const { tableData, updateTableData } = useData();
+    const { tableData, updateTableData, updateTopic } = useData();
     const [showPullModal, setShowPullModal] = useState(false);
     const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
 
@@ -97,51 +97,65 @@ export const DateCard: React.FC<DateCardProps> = ({
         return 'from-gray-600 to-gray-500';
     };
 
+    const PROGRESS_STEPS = [0, 20, 40, 60, 80, 100];
+
+    // Already have useData hook called at top of component
+
+    const handleProgressClick = (e: React.MouseEvent, topic: Topic, topicId: string) => {
+        e.stopPropagation(); // Prevent opening edit modal
+        const currentIndex = PROGRESS_STEPS.indexOf(topic.progress);
+        const nextIndex = (currentIndex + 1) % PROGRESS_STEPS.length;
+        updateTopic(topicId, { progress: PROGRESS_STEPS[nextIndex] });
+    };
+
     return (
-        <div className="glass-card rounded-2xl mb-5 overflow-hidden animate-slideUp">
+        <div className="bg-bg-card border border-border rounded-xl mb-4 overflow-hidden animate-slideUp">
             {/* Header */}
-            <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-white/10">
-                {/* Date Badge */}
-                <div
-                    contentEditable
-                    suppressContentEditableWarning
-                    className="text-sm font-bold text-white bg-gradient-to-r from-accent-blue/30 to-accent-purple/30 border border-accent-blue/50 px-3 py-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue transition-all"
-                    onBlur={(e) => {
-                        const newDate = e.currentTarget.textContent?.trim();
-                        if (newDate && newDate !== date) onDateChange(date, newDate);
-                    }}
-                >
-                    {date}
+            <div className="px-5 py-4 border-b border-white/10">
+                <div className="flex items-center justify-between gap-3 mb-3">
+                    <h3
+                        contentEditable
+                        suppressContentEditableWarning
+                        className="text-lg font-bold text-white flex-1 truncate"
+                        onBlur={(e) => {
+                            const newDate = e.currentTarget.textContent?.trim();
+                            if (newDate && newDate !== date) onDateChange(date, newDate);
+                        }}
+                    >
+                        📅 {date}
+                    </h3>
+
+                    {/* Delete Button */}
+                    <button
+                        onClick={() => onDeleteCard(tableId, date)}
+                        className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                        title="Delete card"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="flex-1 flex items-center gap-3 max-w-[250px]">
-                    <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
-                        <div
-                            className={`h-full bg-gradient-to-r ${getProgressGradient()} rounded-full transition-all duration-500 ease-out`}
-                            style={{ width: `${percentage}%` }}
-                        />
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className={`text-sm font-bold ${percentage === 100 ? 'text-green-400' : 'text-white'}`}>
-                            {Math.round(percentage)}%
-                        </span>
-                        <span className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">
-                            {completedCount}/{totalTopics}
-                        </span>
+                <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                        <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
+                            <div
+                                className={`h-full bg-gradient-to-r ${getProgressGradient()} rounded-full transition-all duration-500 ease-out`}
+                                style={{ width: `${percentage}%` }}
+                            />
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className={`text-sm font-bold ${percentage === 100 ? 'text-green-400' : 'text-white'}`}>
+                                {Math.round(percentage)}%
+                            </span>
+                            <span className="text-xs text-gray-500 bg-white/5 px-2 py-0.5 rounded-full">
+                                {completedCount}/{totalTopics}
+                            </span>
+                        </div>
                     </div>
                 </div>
-
-                {/* Delete Button */}
-                <button
-                    onClick={() => onDeleteCard(tableId, date)}
-                    className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
-                    title="Delete card"
-                >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </button>
             </div>
 
             {/* Columns - Horizontal Grid for Desktop (4 sessions) */}
@@ -154,17 +168,27 @@ export const DateCard: React.FC<DateCardProps> = ({
                                 const topic = completedTopics[topicId];
                                 if (!topic) return null;
                                 return (
-                                    <button
+                                    <div
                                         key={topicId}
                                         onClick={() => onEditTopic(topicId)}
-                                        className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group"
+                                        className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group flex items-center gap-2 cursor-pointer"
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <span className={`w-2 h-2 rounded-full ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-500'}`} />
-                                            <span className="text-sm text-white truncate flex-1">{topic.name}</span>
-                                            <span className="text-xs text-gray-500">{topic.progress}%</span>
-                                        </div>
-                                    </button>
+                                        <button
+                                            onClick={(e) => handleProgressClick(e, topic, topicId)}
+                                            className={`w-3 h-3 rounded-full flex-shrink-0 transition-colors ${topic.progress === 100 ? 'bg-green-500 hover:bg-green-400' : 'bg-gray-600 hover:bg-gray-500'
+                                                } ${topic.progress > 0 && topic.progress < 100 ? 'border-2 border-accent-blue bg-transparent' : ''}`}
+                                            title="Click to cycle progress"
+                                        />
+                                        <span className={`text-sm text-white truncate flex-1 ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
+                                            {topic.name}
+                                        </span>
+                                        <button
+                                            onClick={(e) => handleProgressClick(e, topic, topicId)}
+                                            className={`text-xs text-gray-500 font-mono hover:text-white ${topic.progress === 100 ? 'text-green-500' : ''}`}
+                                        >
+                                            {topic.progress}%
+                                        </button>
+                                    </div>
                                 );
                             })}
                             {(dateData[col] || []).length === 0 && (

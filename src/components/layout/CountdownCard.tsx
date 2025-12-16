@@ -17,27 +17,27 @@ export const CountdownCard: React.FC<CountdownCardProps> = ({ settings }) => {
     ];
 
     return (
-        <div className="bg-gradient-to-br from-blue-900/50 to-bg-primary border border-accent-blue/50 rounded-xl p-4 shadow-glow-blue">
-            <h3 className="text-center text-lg font-black uppercase tracking-wide mb-3 bg-gradient-to-r from-accent-gold via-accent-red to-accent-blue bg-clip-text text-transparent">
+        <div className="bg-gradient-to-br from-blue-900/50 to-bg-primary border border-accent-blue/50 rounded-lg px-3 py-2 shadow-glow-blue flex flex-col justify-center min-w-[280px]">
+            <h3 className="text-center text-xs font-black uppercase tracking-wide mb-1.5 bg-gradient-to-r from-accent-gold via-accent-red to-accent-blue bg-clip-text text-transparent">
                 {settings.title || 'Countdown'}
             </h3>
 
             {isExpired ? (
-                <div className="text-center text-accent-red font-bold text-xl py-4">
+                <div className="text-center text-accent-red font-bold text-sm py-1">
                     🎉 Time's Up! 🎉
                 </div>
             ) : (
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center gap-2">
                     {segments.map(({ label, value, color }) => (
                         <div key={label} className="text-center">
-                            <div className="text-[0.65rem] uppercase tracking-widest text-white font-bold mb-1 drop-shadow">
+                            <div className="text-[0.55rem] uppercase tracking-widest text-gray-400 font-bold mb-0.5">
                                 {label}
                             </div>
                             <div className={`
-                font-mono text-2xl font-black text-white
-                px-3 py-2 rounded-lg min-w-[60px]
+                font-mono text-lg font-black text-white
+                px-2 py-1 rounded-md min-w-[45px]
                 bg-gradient-to-br ${color}
-                shadow-lg
+                shadow-md leading-none
               `}>
                                 {value}
                             </div>

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Topic, ColumnData, TargetCardMeta } from '@/types';
 import { COLUMN_HEADERS } from '@/constants';
+import { useData } from '@/contexts/DataContext';
 
 interface TargetCardProps {
     cardMeta: TargetCardMeta;
@@ -47,6 +48,16 @@ export const TargetCard: React.FC<TargetCardProps> = ({
 
         return { totalDays, daysRemaining: Math.max(0, daysRemaining), timeProgress };
     }, [cardMeta.startDate, cardMeta.endDate]);
+
+    const { updateTopic } = useData();
+    const PROGRESS_STEPS = [0, 20, 40, 60, 80, 100];
+
+    const handleProgressClick = (e: React.MouseEvent, topic: Topic, topicId: string) => {
+        e.stopPropagation(); // Prevent opening edit modal
+        const currentIndex = PROGRESS_STEPS.indexOf(topic.progress);
+        const nextIndex = (currentIndex + 1) % PROGRESS_STEPS.length;
+        updateTopic(topicId, { progress: PROGRESS_STEPS[nextIndex] });
+    };
 
     const formatDateShort = (dateStr: string) => {
         const date = new Date(dateStr);
@@ -121,17 +132,27 @@ export const TargetCard: React.FC<TargetCardProps> = ({
                                 const topic = completedTopics[topicId];
                                 if (!topic) return null;
                                 return (
-                                    <button
+                                    <div
                                         key={topicId}
                                         onClick={() => onEditTopic(topicId)}
-                                        className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group"
+                                        className="w-full text-left p-2 bg-bg-card border border-border rounded-lg hover:border-accent-purple transition-all group flex items-center gap-2 cursor-pointer"
                                     >
-                                        <div className="flex items-center gap-2">
-                                            <span className={`w-2 h-2 rounded-full ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-500'}`} />
-                                            <span className="text-sm text-white truncate flex-1">{topic.name}</span>
-                                            <span className="text-xs text-gray-500">{topic.progress}%</span>
-                                        </div>
-                                    </button>
+                                        <button
+                                            onClick={(e) => handleProgressClick(e, topic, topicId)}
+                                            className={`w-3 h-3 rounded-full flex-shrink-0 transition-colors ${topic.progress === 100 ? 'bg-green-500 hover:bg-green-400' : 'bg-gray-600 hover:bg-gray-500'
+                                                } ${topic.progress > 0 && topic.progress < 100 ? 'border-2 border-accent-blue bg-transparent' : ''}`}
+                                            title="Click to cycle progress"
+                                        />
+                                        <span className={`text-sm flex-1 truncate ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
+                                            {topic.name}
+                                        </span>
+                                        <button
+                                            onClick={(e) => handleProgressClick(e, topic, topicId)}
+                                            className={`text-xs font-mono font-medium hover:text-white ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}
+                                        >
+                                            {topic.progress}%
+                                        </button>
+                                    </div>
                                 );
                             })}
                             {(dateData[col] || []).length === 0 && (

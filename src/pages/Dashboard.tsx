@@ -117,29 +117,29 @@ export const Dashboard: React.FC = () => {
                         </button>
                     </div>
 
+                    {/* View Toggle - Compact & Inline */}
+                    <div className="glass-card flex rounded-lg p-1 shrink-0">
+                        {(['table1', 'table2'] as const).map((v) => (
+                            <button
+                                key={v}
+                                onClick={() => setView(v)}
+                                className={`px-4 py-2 rounded-md text-sm font-semibold transition-all flex items-center gap-2 ${view === v ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-md' : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                    }`}
+                            >
+                                <span>{v === 'table1' ? '🎯' : '📅'}</span>
+                                <span className="hidden xl:inline">{v === 'table1' ? 'Long Term' : 'Daily'}</span>
+                                <span className="inline xl:hidden">{v === 'table1' ? 'Targets' : 'Daily'}</span>
+                            </button>
+                        ))}
+                    </div>
+
                     {/* Progress Bar - Flex Grow */}
                     <div className="flex-1 w-full lg:w-auto">
                         <ProgressBar percentage={stats.pct} completed={stats.completed} total={stats.total} />
                     </div>
 
                     {/* Countdown - from Header component */}
-                    <Header onSettingsClick={() => setShowSettings(true)} onCalendarClick={() => setShowCalendar(true)} />
-                </div>
-
-                {/* View Toggle */}
-                <div className="flex justify-center my-6">
-                    <div className="glass-card flex rounded-xl p-1">
-                        {(['table1', 'table2'] as const).map((v) => (
-                            <button
-                                key={v}
-                                onClick={() => setView(v)}
-                                className={`px-6 py-2 rounded-lg font-semibold transition-all ${view === v ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-lg' : 'text-gray-400 hover:text-white'
-                                    }`}
-                            >
-                                {v === 'table1' ? '🎯 Long Time Targets' : '📅 Daily Targets'}
-                            </button>
-                        ))}
-                    </div>
+                    <Header />
                 </div>
 
                 {/* Target Cards View */}
