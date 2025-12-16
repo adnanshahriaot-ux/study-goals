@@ -53,24 +53,30 @@ export const DateCard: React.FC<DateCardProps> = ({
         });
 
         // Get topics from Targets that aren't in this Daily Plan card
-        (tableData.targetCards || []).forEach(card => {
-            const targetTitle = card.title;
-            const targetData = card.data || {};
+        if (tableData.targetCards) {
+            tableData.targetCards.forEach(card => {
+                const targetTitle = card.data ? card.title : 'Legacy Target';
+                const targetData = card.data || {};
 
-            Object.entries(targetData).forEach(([colName, topicIds]) => {
-                topicIds.forEach(id => {
-                    const topic = completedTopics[id];
-                    if (topic && !alreadyInDailyPlan.has(id) && topic.progress < 100) {
-                        topics.push({
-                            topicId: id,
-                            topic,
-                            targetTitle,
-                            column: colName
+                Object.entries(targetData).forEach(([colName, topicIds]) => {
+                    if (Array.isArray(topicIds)) {
+                        topicIds.forEach(id => {
+                            const topic = completedTopics[id];
+                            // Relaxed check: allow pulling even if 100% (user can decide), or at least to debug visibility.
+                            // Checking topic existence and uniqueness in current daily card.
+                            if (topic && !alreadyInDailyPlan.has(id)) {
+                                topics.push({
+                                    topicId: id,
+                                    topic,
+                                    targetTitle,
+                                    column: colName
+                                });
+                            }
                         });
                     }
                 });
             });
-        });
+        }
 
         return topics;
     }, [tableId, tableData, dateData, completedTopics]);
