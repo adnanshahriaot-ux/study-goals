@@ -44,7 +44,7 @@ export const DateCard: React.FC<DateCardProps> = ({
     const availableTargetTopics = useMemo(() => {
         if (tableId !== 'table2') return [];
 
-        const topics: { topicId: string; topic: Topic; sourceDate: string; column: string }[] = [];
+        const topics: { topicId: string; topic: Topic; targetTitle: string; column: string }[] = [];
         const alreadyInDailyPlan = new Set<string>();
 
         // Get all topic IDs already in this Daily Plan card
@@ -53,14 +53,18 @@ export const DateCard: React.FC<DateCardProps> = ({
         });
 
         // Get topics from Targets that aren't in this Daily Plan card
-        Object.entries(tableData.table1).forEach(([sourceDate, cols]) => {
+        Object.entries(tableData.table1).forEach(([cardId, cols]) => {
+            // Find the target title from targetCards metadata
+            const targetMeta = tableData.targetCards?.find(t => t.id === cardId);
+            const targetTitle = targetMeta?.title || 'Target';
+
             Object.entries(cols).forEach(([column, topicIds]) => {
                 topicIds.forEach(topicId => {
                     if (!alreadyInDailyPlan.has(topicId) && completedTopics[topicId]) {
                         topics.push({
                             topicId,
                             topic: completedTopics[topicId],
-                            sourceDate,
+                            targetTitle,
                             column
                         });
                     }
@@ -207,7 +211,7 @@ export const DateCard: React.FC<DateCardProps> = ({
                                 </button>
                                 <p className="text-gray-400 text-sm mb-4">Adding to: <span className="text-white font-medium">{selectedColumn}</span></p>
                                 <div className="space-y-2">
-                                    {availableTargetTopics.map(({ topicId, topic, sourceDate, column }) => (
+                                    {availableTargetTopics.map(({ topicId, topic, targetTitle, column }) => (
                                         <button
                                             key={topicId}
                                             onClick={() => handlePullTopic(topicId, selectedColumn)}
@@ -219,7 +223,7 @@ export const DateCard: React.FC<DateCardProps> = ({
                                                 <span className="text-xs text-gray-500">{topic.progress}%</span>
                                             </div>
                                             <div className="text-xs text-gray-500 mt-1">
-                                                From: {column} • {sourceDate}
+                                                From: {column} • {targetTitle}
                                             </div>
                                         </button>
                                     ))}

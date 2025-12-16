@@ -101,25 +101,27 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const topicId = `topic_${Date.now().toString(36)}${Math.random().toString(36).substr(2, 9)}`;
         const table = tableId as 'table1' | 'table2';
 
-        setCompletedTopics((prev) => ({ ...prev, [topicId]: topic }));
         setTableData((prev) => {
-            const updated = { ...prev };
+            const updated = JSON.parse(JSON.stringify(prev));
             if (!updated[table][cardId]) {
                 updated[table][cardId] = {};
             }
             if (!updated[table][cardId][column]) {
                 updated[table][cardId][column] = [];
             }
-            updated[table][cardId][column] = [
-                ...updated[table][cardId][column],
-                topicId
-            ];
+            updated[table][cardId][column].push(topicId);
+            return updated;
+        });
 
-            setCompletedTopics((topics) => {
-                debouncedSave(updated, { ...topics, [topicId]: topic });
-                return { ...topics, [topicId]: topic };
-            });
-
+        setCompletedTopics((prev) => {
+            const updated = { ...prev, [topicId]: topic };
+            // Trigger save after both states are updated
+            setTimeout(() => {
+                setTableData(currentTableData => {
+                    debouncedSave(currentTableData, updated);
+                    return currentTableData;
+                });
+            }, 0);
             return updated;
         });
 
