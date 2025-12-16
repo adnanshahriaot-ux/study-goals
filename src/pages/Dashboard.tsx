@@ -373,20 +373,28 @@ export const Dashboard: React.FC = () => {
                                 </button>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                {sortedDailyDates.map((date) => (
-                                    <DateCard
-                                        key={date}
-                                        tableId="table2"
-                                        date={date}
-                                        dateData={tableData.table2[date]}
-                                        completedTopics={completedTopics}
-                                        onAddTopic={(tId, d) => setAddTopicInfo({ tableId: tId, cardId: d })}
-                                        onEditTopic={(id) => setEditTopicId(id)}
-                                        onDeleteCard={(tId, d) => setDeleteConfirm({ tableId: tId, cardId: d })}
-                                        onDateChange={handleDateChange}
-                                    />
-                                ))}
+                            <div className="flex flex-col gap-4">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                    {sortedDailyDates.map((date) => (
+                                        <DateCard
+                                            key={date}
+                                            tableId="table2"
+                                            date={date}
+                                            dateData={tableData.table2[date]}
+                                            completedTopics={completedTopics}
+                                            onAddTopic={(tId, d) => setAddTopicInfo({ tableId: tId, cardId: d })}
+                                            onEditTopic={(id) => setEditTopicId(id)}
+                                            onDeleteCard={(tId, d) => setDeleteConfirm({ tableId: tId, cardId: d })}
+                                            onDateChange={handleDateChange}
+                                        />
+                                    ))}
+                                </div>
+                                <button
+                                    onClick={() => setShowCalendar(true)}
+                                    className="w-full py-4 border-2 border-dashed border-white/20 rounded-2xl text-gray-400 font-semibold hover:text-accent-cyan hover:border-accent-cyan hover:bg-accent-cyan/5 transition-all"
+                                >
+                                    + Add New Day
+                                </button>
                             </div>
                         )}
                     </>
