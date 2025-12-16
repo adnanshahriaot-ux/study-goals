@@ -104,7 +104,7 @@ export const Dashboard: React.FC = () => {
                                 className={`px-6 py-2 rounded-lg font-semibold transition-all ${view === v ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-lg' : 'text-gray-400 hover:text-white'
                                     }`}
                             >
-                                {v === 'table1' ? '🎯 Targets' : '📅 Daily Plan'}
+                                {v === 'table1' ? '🎯 Long Time Targets' : '📅 Daily Targets'}
                             </button>
                         ))}
                     </div>
