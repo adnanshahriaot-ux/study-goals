@@ -49,15 +49,21 @@ export const Dashboard: React.FC = () => {
 
         // Collect IDs from Target Cards
         (tableData.targetCards || []).forEach(card => {
-            Object.values(card.data || {}).forEach(columnTopics => {
-                columnTopics.forEach(id => activeTopicIds.add(id));
+            // Check both card.data (new) and table1 (legacy/current)
+            const data = card.data || tableData.table1[card.id] || {};
+            Object.values(data).forEach(columnTopics => {
+                if (Array.isArray(columnTopics)) {
+                    columnTopics.forEach(id => activeTopicIds.add(id));
+                }
             });
         });
 
         // Collect IDs from Daily Plan (table2)
         Object.values(tableData.table2).forEach(dateColumns => {
             Object.values(dateColumns).forEach(columnTopics => {
-                columnTopics.forEach(id => activeTopicIds.add(id));
+                if (Array.isArray(columnTopics)) {
+                    columnTopics.forEach(id => activeTopicIds.add(id));
+                }
             });
         });
 
