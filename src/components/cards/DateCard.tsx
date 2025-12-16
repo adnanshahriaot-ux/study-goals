@@ -122,7 +122,7 @@ export const DateCard: React.FC<DateCardProps> = ({
                             if (newDate && newDate !== date) onDateChange(date, newDate);
                         }}
                     >
-                        📅 {date}
+                        {date}
                     </h3>
 
                     {/* Delete Button */}
@@ -220,10 +220,10 @@ export const DateCard: React.FC<DateCardProps> = ({
                 </button>
 
                 {/* Pull from Targets button - only show in Daily Plan */}
-                {tableId === 'table2' && availableTargetTopics.length > 0 && (
+                {tableId === 'table2' && (
                     <button
                         onClick={() => setShowPullModal(true)}
-                        className="pull-button px-4 py-2.5 rounded-xl font-semibold"
+                        className="pull-button px-4 py-2.5 rounded-xl font-semibold bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all"
                     >
                         ⬇ Pull
                     </button>
