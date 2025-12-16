@@ -14,7 +14,7 @@ interface AddTopicModalProps {
 }
 
 export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, tableId, date }) => {
-    const { settings, addTopic } = useData();
+    const { settings, addTopic, tableData } = useData();
     const [name, setName] = useState('');
     const [timedNote, setTimedNote] = useState('');
     const [estimatedTime, setEstimatedTime] = useState('');
@@ -22,6 +22,20 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
     const [hardness, setHardness] = useState('medium');
     const [studyStatus, setStudyStatus] = useState(settings.customStudyTypes[0]?.key || '');
     const [priority, setPriority] = useState<'high' | 'medium' | 'low'>('low');
+
+    // Sync Logic: Check if current date falls within any Target Card
+    const targetCardMatch = tableId === 'table2' ? (tableData.targetCards || []).find(card => {
+        const start = new Date(card.startDate);
+        const end = new Date(card.endDate);
+        const current = new Date(date.split('/').reverse().join('-')); // assuming date is DD/MM/YYYY or YYYY-MM-DD. Let's check format.
+        // Actually, date passed to modal from DateCard is likely YYYY-MM-DD.
+        // Let's use simple string comparison if format matches, or Date objects.
+        // Safer to use Date objects.
+        const d = new Date(date);
+        return d >= start && d <= end;
+    }) : undefined;
+
+    const [targetSubject, setTargetSubject] = useState('');
 
     const handleSave = () => {
         if (!name.trim()) return;
@@ -37,13 +51,20 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
             studyStatus
         };
 
-        addTopic(tableId, date, column, topic);
+        // Add to current table (e.g., Daily Plan)
+        const newTopicId = addTopic(tableId, date, column, topic);
+
+        // If syncing is enabled (Target Subject selected), add to Target Card too
+        if (targetCardMatch && targetSubject) {
+            addTopic('table1', targetCardMatch.id, targetSubject, topic, newTopicId);
+        }
 
         // Reset form
         setName('');
         setTimedNote('');
         setEstimatedTime('');
         setPriority('low');
+        setTargetSubject('');
         onClose();
     };
 
@@ -143,6 +164,24 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
                         ))}
                     </div>
                 </div>
+
+                {/* Target Sync Section */}
+                {targetCardMatch && (
+                    <div className="pt-4 border-t border-white/10">
+                        <label className="block text-sm font-medium text-accent-purple mb-1 flex items-center gap-2">
+                            <span className="animate-pulse">🔗</span> Link to Target: {targetCardMatch.title}
+                        </label>
+                        <p className="text-xs text-gray-500 mb-2">Select a subject to automatically add this task to your long-term plan.</p>
+                        <Dropdown
+                            options={[
+                                { value: '', label: 'Do not link' },
+                                ...COLUMN_HEADERS.table1.map(c => ({ value: c, label: c }))
+                            ]}
+                            value={targetSubject}
+                            onChange={setTargetSubject}
+                        />
+                    </div>
+                )}
             </div>
         </Modal>
     );

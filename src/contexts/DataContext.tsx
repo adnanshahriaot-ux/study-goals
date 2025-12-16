@@ -11,7 +11,7 @@ interface DataContextType {
     settings: AppSettings;
     isLoading: boolean;
     updateTopic: (topicId: string, updates: Partial<Topic>) => void;
-    addTopic: (tableId: string, date: string, column: string, topic: Topic) => string;
+    addTopic: (tableId: string, date: string, column: string, topic: Topic, customTopicId?: string) => string;
     deleteTopic: (topicId: string) => void;
     updateTableData: (newTableData: TableData) => void;
     updateSettings: (newSettings: AppSettings) => void;
@@ -97,8 +97,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         });
     }, [tableData, debouncedSave]);
 
-    const addTopic = useCallback((tableId: string, cardId: string, column: string, topic: Topic): string => {
-        const topicId = `topic_${Date.now().toString(36)}${Math.random().toString(36).substr(2, 9)}`;
+    const addTopic = useCallback((tableId: string, cardId: string, column: string, topic: Topic, customTopicId?: string): string => {
+        const topicId = customTopicId || `topic_${Date.now().toString(36)}${Math.random().toString(36).substr(2, 9)}`;
         const table = tableId as 'table1' | 'table2';
 
         setTableData((prev) => {
