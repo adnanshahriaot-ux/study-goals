@@ -18,6 +18,7 @@ export interface TargetCardMeta {
     startDate: string; // Format: YYYY-MM-DD
     endDate: string;   // Format: YYYY-MM-DD
     color?: string;    // Optional accent color
+    data: ColumnData;  // Topic data for the card
 }
 
 // Table Data Types

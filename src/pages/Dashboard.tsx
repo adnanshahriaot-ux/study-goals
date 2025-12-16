@@ -45,13 +45,33 @@ export const Dashboard: React.FC = () => {
     }, [tableData.targetCards]);
 
     const stats = useMemo(() => {
-        let total = 0, completed = 0;
-        Object.values(completedTopics).forEach((t) => {
-            total++;
-            if (t.progress === 100) completed++;
+        const activeTopicIds = new Set<string>();
+
+        // Collect IDs from Target Cards
+        (tableData.targetCards || []).forEach(card => {
+            Object.values(card.data).forEach(columnTopics => {
+                columnTopics.forEach(id => activeTopicIds.add(id));
+            });
         });
+
+        // Collect IDs from Daily Plan (table2)
+        Object.values(tableData.table2).forEach(dateColumns => {
+            Object.values(dateColumns).forEach(columnTopics => {
+                columnTopics.forEach(id => activeTopicIds.add(id));
+            });
+        });
+
+        let total = 0, completed = 0;
+        activeTopicIds.forEach(id => {
+            const topic = completedTopics[id];
+            if (topic) {
+                total++;
+                if (topic.progress === 100) completed++;
+            }
+        });
+
         return { total, completed, pct: total > 0 ? (completed / total) * 100 : 0 };
-    }, [completedTopics]);
+    }, [tableData, completedTopics]);
 
     const existingDates = useMemo(() =>
         Object.keys(tableData.table1).concat(Object.keys(tableData.table2)),

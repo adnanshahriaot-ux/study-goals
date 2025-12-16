@@ -181,12 +181,12 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const addTargetCard = useCallback((title: string, startDate: string, endDate: string): string => {
         const cardId = `target_${Date.now().toString(36)}${Math.random().toString(36).substr(2, 5)}`;
-        const newCard: TargetCardMeta = { id: cardId, title, startDate, endDate };
+        const newCard: TargetCardMeta = { id: cardId, title, startDate, endDate, data: {} };
 
         setTableData((prev) => {
             const updated = {
                 ...prev,
-                table1: { ...prev.table1, [cardId]: {} },
+                // table1 no longer used for targets. Target data is now in card.data (initialized above)
                 targetCards: [...(prev.targetCards || []), newCard]
             };
             debouncedSave(updated, completedTopics);
