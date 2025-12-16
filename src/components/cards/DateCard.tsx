@@ -165,65 +165,73 @@ export const DateCard: React.FC<DateCardProps> = ({
             </div>
 
             {/* Columns - Compact */}
-            <div className="p-2 grid grid-cols-1 md:grid-cols-4 gap-2">
-                {columns.map((col) => (
-                    <div key={col} className="bg-gray-800/40 rounded-md p-1.5 min-h-[40px] border border-white/5">
-                        <h4 className="text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wide px-1">{col}</h4>
-                        <div className="space-y-1">
-                            {(dateData[col] || []).map((topicId) => {
-                                const topic = completedTopics[topicId];
-                                if (!topic) return null;
-                                return (
-                                    <div
-                                        key={topicId}
-                                        onClick={(e) => handleProgressClick(e, topic, topicId)}
-                                        className="w-full text-left p-1.5 bg-bg-card border border-border rounded-md hover:border-accent-purple transition-all group flex items-center gap-1.5 cursor-pointer relative pr-6">
+            {/* Show only columns with data, or placeholder if empty */}
+            {columns.filter(col => (dateData[col] || []).length > 0).length === 0 ? (
+                <div className="p-4 text-center text-gray-500 text-xs italic">
+                    No topics planned for this day
+                </div>
+            ) : (
+                <div className={`p-2 grid grid-cols-1 ${columns.filter(col => (dateData[col] || []).length > 0).length === 1 ? '' : 'md:grid-cols-2'
+                    } gap-2`}>
+                    {columns.filter(col => (dateData[col] || []).length > 0).map((col) => (
+                        <div key={col} className="bg-gray-800/40 rounded-md p-1.5 min-h-[40px] border border-white/5">
+                            <h4 className="text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wide px-1">{col}</h4>
+                            <div className="space-y-1">
+                                {(dateData[col] || []).map((topicId) => {
+                                    const topic = completedTopics[topicId];
+                                    if (!topic) return null;
+                                    return (
                                         <div
-                                            className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
-                                                } ${topic.progress > 0 && topic.progress < 100 ? 'border-2 border-accent-blue bg-transparent' : ''}`}
-                                        />
-                                        <div className="flex-1 min-w-0">
-                                            <span className={`text-xs truncate block ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
-                                                {topic.name}
+                                            key={topicId}
+                                            onClick={(e) => handleProgressClick(e, topic, topicId)}
+                                            className="w-full text-left p-1.5 bg-bg-card border border-border rounded-md hover:border-accent-purple transition-all group flex items-center gap-1.5 cursor-pointer relative pr-6">
+                                            <div
+                                                className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
+                                                    } ${topic.progress > 0 && topic.progress < 100 ? 'border-2 border-accent-blue bg-transparent' : ''}`}
+                                            />
+                                            <div className="flex-1 min-w-0">
+                                                <span className={`text-xs truncate block ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
+                                                    {topic.name}
+                                                </span>
+                                                {topic.note && (
+                                                    <span className="text-[10px] text-gray-500 truncate italic">
+                                                        {topic.note}
+                                                    </span>
+                                                )}
+                                                {topic.estimatedTime && (
+                                                    <span className="text-[10px] text-accent-purple truncate font-mono flex items-center gap-1 mt-0.5">
+                                                        <span className="text-xs">⏰</span> {topic.estimatedTime}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <span className={`text-[10px] font-mono ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}>
+                                                {topic.progress}%
                                             </span>
-                                            {topic.note && (
-                                                <span className="text-[10px] text-gray-500 truncate italic">
-                                                    {topic.note}
-                                                </span>
-                                            )}
-                                            {topic.estimatedTime && (
-                                                <span className="text-[10px] text-accent-purple truncate font-mono flex items-center gap-1 mt-0.5">
-                                                    <span className="text-xs">⏰</span> {topic.estimatedTime}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <span className={`text-[10px] font-mono ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}>
-                                            {topic.progress}%
-                                        </span>
 
-                                        {/* Edit Pencil - Hover Only */}
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                onEditTopic(topicId);
-                                            }}
-                                            className="opacity-0 group-hover:opacity-100 absolute right-2 p-1 text-gray-400 hover:text-accent-blue bg-bg-card/80 rounded transition-all"
-                                            title="Edit details"
-                                        >
-                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                );
-                            })}
-                            {(dateData[col] || []).length === 0 && (
-                                <p className="text-xs text-gray-600 italic">No topics</p>
-                            )}
+                                            {/* Edit Pencil - Hover Only */}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onEditTopic(topicId);
+                                                }}
+                                                className="opacity-0 group-hover:opacity-100 absolute right-2 p-1 text-gray-400 hover:text-accent-blue bg-bg-card/80 rounded transition-all"
+                                                title="Edit details"
+                                            >
+                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    );
+                                })}
+                                {(dateData[col] || []).length === 0 && (
+                                    <p className="text-xs text-gray-600 italic">No topics</p>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
 
             {/* Action Buttons */}
             <div className="px-2 pb-2 flex gap-2">

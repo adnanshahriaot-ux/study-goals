@@ -65,7 +65,9 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
         onClose();
     };
 
-    const columns = COLUMN_HEADERS[tableId as keyof typeof COLUMN_HEADERS];
+    const columns = tableId === 'table1'
+        ? (settings.customSubjects || []).map(s => s.name)
+        : COLUMN_HEADERS[tableId as keyof typeof COLUMN_HEADERS];
     const columnOptions = columns.map((c) => ({ value: c, label: c }));
     const hardnessOptions = [
         { value: 'easy', label: 'Easy' },
@@ -81,80 +83,80 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
             title="Add New Topic"
             footer={
                 <div className="flex justify-end gap-3">
-                    <Button variant="secondary" onClick={onClose}>Cancel</Button>
-                    <Button onClick={handleSave} disabled={!name.trim()}>Save Topic</Button>
+                    <Button variant="secondary" onClick={onClose} className="text-xs px-3 py-1.5 h-8">Cancel</Button>
+                    <Button onClick={handleSave} disabled={!name.trim()} className="text-xs px-3 py-1.5 h-8">Save Topic</Button>
                 </div>
             }
         >
-            <div className="space-y-4">
+            <div className="space-y-3">
                 <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">Topic Name</label>
+                    <label className="block text-xs font-medium text-gray-400 mb-0.5">Topic Name</label>
                     <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full px-3 py-2 bg-bg-hover border border-border rounded-lg text-white focus:outline-none focus:border-accent-blue"
+                        className="w-full px-2 py-1.5 bg-bg-hover border border-border rounded text-sm text-white focus:outline-none focus:border-accent-blue"
                         placeholder="Enter topic name"
                         autoFocus
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">Timed Note</label>
+                    <label className="block text-xs font-medium text-gray-400 mb-0.5">Timed Note</label>
                     <input
                         type="text"
                         value={timedNote}
                         onChange={(e) => setTimedNote(e.target.value)}
-                        className="w-full px-3 py-2 bg-bg-hover border border-border rounded-lg text-white focus:outline-none focus:border-accent-blue"
+                        className="w-full px-2 py-1.5 bg-bg-hover border border-border rounded text-sm text-white focus:outline-none focus:border-accent-blue"
                         placeholder="e.g., 30 min or 10:00 AM"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">Estimated Time (Optional)</label>
+                    <label className="block text-xs font-medium text-gray-400 mb-0.5">Estimated Time (Optional)</label>
                     <input
                         type="text"
                         value={estimatedTime}
                         onChange={(e) => setEstimatedTime(e.target.value)}
-                        className="w-full px-3 py-2 bg-bg-hover border border-border rounded-lg text-white focus:outline-none focus:border-accent-blue"
+                        className="w-full px-2 py-1.5 bg-bg-hover border border-border rounded text-sm text-white focus:outline-none focus:border-accent-blue"
                         placeholder="e.g., 11 am - 9 pm"
                     />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3">
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                        <label className="block text-xs font-medium text-gray-400 mb-0.5">
                             {tableId === 'table1' ? 'Subject' : 'Session'}
                         </label>
                         <Dropdown options={columnOptions} value={column} onChange={setColumn} />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">Hardness</label>
+                        <label className="block text-xs font-medium text-gray-400 mb-0.5">Hardness</label>
                         <Dropdown options={hardnessOptions} value={hardness} onChange={setHardness} />
                     </div>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">Study Type</label>
+                    <label className="block text-xs font-medium text-gray-400 mb-0.5">Study Type</label>
                     <Dropdown options={studyOptions} value={studyStatus} onChange={setStudyStatus} />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Priority</label>
+                    <label className="block text-xs font-medium text-gray-400 mb-1">Priority</label>
                     <div className="flex gap-2">
                         {(['high', 'medium', 'low'] as const).map((p) => (
                             <button
                                 key={p}
                                 type="button"
                                 onClick={() => setPriority(p)}
-                                className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-all ${priority === p
+                                className={`flex items-center gap-1.5 px-2 py-1.5 rounded border transition-all text-xs ${priority === p
                                     ? p === 'high' ? 'border-accent-red bg-accent-red/20 text-white'
                                         : p === 'medium' ? 'border-accent-gold bg-accent-gold/20 text-white'
                                             : 'border-border-light bg-bg-hover text-white'
                                     : 'border-border text-gray-400 hover:border-border-light'
                                     }`}
                             >
-                                <span className={`w-2 h-2 rounded-full ${p === 'high' ? 'bg-accent-red' : p === 'medium' ? 'bg-accent-gold' : 'bg-gray-500'
+                                <span className={`w-1.5 h-1.5 rounded-full ${p === 'high' ? 'bg-accent-red' : p === 'medium' ? 'bg-accent-gold' : 'bg-gray-500'
                                     }`} />
                                 {p.charAt(0).toUpperCase() + p.slice(1)}
                             </button>
@@ -164,11 +166,11 @@ export const AddTopicModal: React.FC<AddTopicModalProps> = ({ isOpen, onClose, t
 
                 {/* Target Sync Section */}
                 {targetCardMatch && (
-                    <div className="pt-4 border-t border-white/10">
-                        <label className="block text-sm font-medium text-accent-purple mb-1 flex items-center gap-2">
+                    <div className="pt-3 border-t border-white/10">
+                        <label className="block text-xs font-medium text-accent-purple mb-0.5 flex items-center gap-1.5">
                             <span className="animate-pulse">🔗</span> Link to Target: {targetCardMatch.title}
                         </label>
-                        <p className="text-xs text-gray-500 mb-2">Select a subject to automatically add this task to your long-term plan.</p>
+                        <p className="text-[10px] text-gray-500 mb-1.5">Select a subject to automatically add this task to your long-term plan.</p>
                         <Dropdown
                             options={[
                                 { value: '', label: 'Do not link' },

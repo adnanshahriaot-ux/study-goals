@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/common/Button';
 import { useData } from '@/contexts/DataContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { StudyType } from '@/types';
+import { StudyType, Subject } from '@/types';
 
 interface SettingsContentProps {
     onLogout?: () => void;
@@ -11,16 +11,18 @@ interface SettingsContentProps {
 export const SettingsContent: React.FC<SettingsContentProps> = ({ onLogout }) => {
     const { user, logout } = useAuth();
     const { settings, updateSettings } = useData();
-    const [activeTab, setActiveTab] = useState<'account' | 'custom' | 'countdown' | 'dev'>('account');
+    const [activeTab, setActiveTab] = useState<'account' | 'custom' | 'subjects' | 'countdown' | 'dev'>('account');
 
     // Local state for forms
     const [studyTypes, setStudyTypes] = useState<StudyType[]>([]);
+    const [subjects, setSubjects] = useState<Subject[]>([]);
     const [countdownTitle, setCountdownTitle] = useState('');
     const [countdownDate, setCountdownDate] = useState('');
     const [countdownTime, setCountdownTime] = useState('');
 
     useEffect(() => {
         setStudyTypes(settings.customStudyTypes || []);
+        setSubjects(settings.customSubjects || []);
         setCountdownTitle(settings.countdownSettings.title);
         setCountdownDate(settings.countdownSettings.targetDate);
         setCountdownTime(settings.countdownSettings.targetTime);
@@ -29,6 +31,11 @@ export const SettingsContent: React.FC<SettingsContentProps> = ({ onLogout }) =>
     const handleSaveStudyTypes = () => {
         const validTypes = studyTypes.filter((t) => t.name.trim());
         updateSettings({ ...settings, customStudyTypes: validTypes });
+    };
+
+    const handleSaveSubjects = () => {
+        const validSubjects = subjects.filter((s) => s.name.trim());
+        updateSettings({ ...settings, customSubjects: validSubjects });
     };
 
     const handleSaveCountdown = () => {
@@ -42,8 +49,16 @@ export const SettingsContent: React.FC<SettingsContentProps> = ({ onLogout }) =>
         setStudyTypes([...studyTypes, { key: `custom_${Date.now()}`, name: '' }]);
     };
 
+    const addSubject = () => {
+        setSubjects([...subjects, { key: `sub_${Date.now()}`, name: '', color: 'blue' }]);
+    };
+
     const removeStudyType = (key: string) => {
         setStudyTypes(studyTypes.filter((t) => t.key !== key));
+    };
+
+    const removeSubject = (key: string) => {
+        setSubjects(subjects.filter((s) => s.key !== key));
     };
 
     const handleLogout = () => {
@@ -53,8 +68,9 @@ export const SettingsContent: React.FC<SettingsContentProps> = ({ onLogout }) =>
 
     const tabs = [
         { id: 'account', label: 'Account', icon: '👤' },
-        { id: 'custom', label: 'Custom', icon: '🎨' },
-        { id: 'countdown', label: 'Ref', icon: '⏳' },
+        { id: 'custom', label: 'Types', icon: '🎨' },
+        { id: 'subjects', label: 'Subjects', icon: '📚' },
+        { id: 'countdown', label: 'Timer', icon: '⏳' },
         { id: 'dev', label: 'Dev', icon: '👨‍💻' }
     ] as const;
 
@@ -73,7 +89,7 @@ export const SettingsContent: React.FC<SettingsContentProps> = ({ onLogout }) =>
                             }`}
                     >
                         <span className="text-sm">{tab.icon}</span>
-                        <span className="hidden md:inline">{tab.label === 'Ref' ? 'Countdown' : tab.label}</span>
+                        <span className="hidden md:inline">{tab.label}</span>
                         <span className="md:hidden text-[10px]">{tab.label}</span>
                     </button>
                 ))}
@@ -147,6 +163,48 @@ export const SettingsContent: React.FC<SettingsContentProps> = ({ onLogout }) =>
 
                         <Button variant="secondary" onClick={addStudyType} className="w-full py-1.5 text-xs border-dashed border border-white/10">
                             + Add Type
+                        </Button>
+                    </div>
+                )}
+
+                {/* Subjects Tab */}
+                {activeTab === 'subjects' && (
+                    <div className="space-y-3 animate-fadeIn">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-sm font-bold text-white">Subjects</h2>
+                            <Button variant="success" onClick={handleSaveSubjects} className="px-3 py-1 text-xs">Save</Button>
+                        </div>
+                        <p className="text-gray-400 text-[10px]">Define your study subjects</p>
+
+                        <div className="space-y-2">
+                            {subjects.map((subject) => (
+                                <div key={subject.key} className="flex gap-1.5 group">
+                                    <input
+                                        type="text"
+                                        value={subject.name}
+                                        onChange={(e) => setSubjects(subjects.map((s) => s.key === subject.key ? { ...s, name: e.target.value } : s))}
+                                        className="flex-1 px-2 py-1.5 bg-black/20 border border-white/10 rounded-md text-xs text-white focus:border-accent-purple transition-all"
+                                        placeholder="Subject name"
+                                    />
+                                    <button
+                                        onClick={() => removeSubject(subject.key)}
+                                        className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-md transition-all"
+                                    >
+                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            ))}
+                            {subjects.length === 0 && (
+                                <div className="text-center py-4 text-[10px] text-gray-500 bg-white/5 rounded-md border border-dashed border-white/10">
+                                    No subjects yet
+                                </div>
+                            )}
+                        </div>
+
+                        <Button variant="secondary" onClick={addSubject} className="w-full py-1.5 text-xs border-dashed border border-white/10">
+                            + Add Subject
                         </Button>
                     </div>
                 )}

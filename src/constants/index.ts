@@ -1,4 +1,4 @@
-import { AppSettings, TableData, StudyType } from '@/types';
+import { AppSettings, TableData, StudyType, Subject } from '@/types';
 
 export const COLUMN_HEADERS = {
     table1: ['Phy', 'Chem', 'Bio', 'GK', 'English'],
@@ -24,8 +24,17 @@ export const DEFAULT_STUDY_TYPES: StudyType[] = [
     { key: 'secret', name: 'Secret Files' }
 ];
 
+export const DEFAULT_SUBJECTS: Subject[] = [
+    { key: 'phy', name: 'Physics', color: 'blue' },
+    { key: 'chem', name: 'Chemistry', color: 'green' },
+    { key: 'bio', name: 'Biology', color: 'purple' },
+    { key: 'math', name: 'Math', color: 'orange' },
+    { key: 'eng', name: 'English', color: 'cyan' }
+];
+
 export const DEFAULT_SETTINGS: AppSettings = {
     customStudyTypes: [...DEFAULT_STUDY_TYPES],
+    customSubjects: [...DEFAULT_SUBJECTS],
     countdownSettings: {
         title: 'Countdown to Goal',
         targetDate: '2025-12-31',

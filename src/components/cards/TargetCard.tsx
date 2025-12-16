@@ -49,7 +49,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({
         return { totalDays, daysRemaining: Math.max(0, daysRemaining), timeProgress };
     }, [cardMeta.startDate, cardMeta.endDate]);
 
-    const { updateTopic } = useData();
+    const { updateTopic, settings } = useData();
     const PROGRESS_STEPS = [0, 20, 40, 60, 80, 100];
 
     const handleProgressClick = (e: React.MouseEvent, topic: Topic, topicId: string) => {
@@ -63,6 +63,22 @@ export const TargetCard: React.FC<TargetCardProps> = ({
         const date = new Date(dateStr);
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     };
+
+    // Determine visible columns (Subjects)
+    const visibleColumns = useMemo(() => {
+        // Get all available subjects from settings and current data
+        const customSubjectNames = (settings.customSubjects || []).map(s => s.name);
+        const dataKeys = Object.keys(dateData);
+        const allPotentialSubjects = Array.from(new Set([...customSubjectNames, ...dataKeys]));
+
+        // Filter: Only show subjects that have topics
+        const withData = allPotentialSubjects.filter(col => (dateData[col] || []).length > 0);
+
+        // If NO topics exist at all, we might show nothing, or show defaults.
+        // User request: "hide the empty subs, untill any topic is added"
+        // So strict filtering is correct.
+        return withData;
+    }, [dateData, settings.customSubjects]);
 
     return (
         <div className="bg-bg-card border border-border rounded-lg mb-3 overflow-hidden">
@@ -140,66 +156,75 @@ export const TargetCard: React.FC<TargetCardProps> = ({
                 </div>
             </div>
 
-            {/* Columns - Compact */}
-            <div className="px-2 pb-2 grid grid-cols-1 md:grid-cols-3 gap-2">
-                {columns.map((col) => (
-                    <div key={col} className="bg-gray-800/40 rounded-md p-1.5 min-h-[40px] border border-white/5">
-                        <h4 className="text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wide px-1">{col}</h4>
-                        <div className="space-y-1">
-                            {(dateData[col] || []).map((topicId) => {
-                                const topic = completedTopics[topicId];
-                                if (!topic) return null;
-                                return (
-                                    <div
-                                        key={topicId}
-                                        onClick={(e) => handleProgressClick(e, topic, topicId)}
-                                        className="w-full text-left p-1.5 bg-bg-card border border-border rounded-md hover:border-accent-purple transition-all group flex items-center gap-1.5 cursor-pointer relative pr-6">
-                                        <div
-                                            className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
-                                                } ${topic.progress > 0 && topic.progress < 100 ? 'border-2 border-accent-blue bg-transparent' : ''}`}
-                                        />
-                                        <div className="flex-1 min-w-0">
-                                            <span className={`text-xs truncate block ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
-                                                {topic.name}
-                                            </span>
-                                            {topic.note && (
-                                                <span className="text-[10px] text-gray-500 truncate italic">
-                                                    {topic.note}
-                                                </span>
-                                            )}
-                                            {topic.estimatedTime && (
-                                                <span className="text-[10px] text-accent-purple truncate font-mono flex items-center gap-1 mt-0.5">
-                                                    <span className="text-xs">⏰</span> {topic.estimatedTime}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <span className={`text-[10px] font-mono ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}>
-                                            {topic.progress}%
-                                        </span>
+            {/* Check for empty state */}
+            {visibleColumns.length === 0 && (
+                <div className="px-3 pb-3 text-center">
+                    <p className="text-[10px] text-gray-500 italic mb-1">No topics added yet</p>
+                </div>
+            )}
 
-                                        {/* Edit Pencil - Absolute positioned for consistent placement */}
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                onEditTopic(topicId);
-                                            }}
-                                            className="opacity-0 group-hover:opacity-100 absolute right-2 p-1 text-gray-400 hover:text-accent-blue bg-bg-card/80 rounded transition-all"
-                                            title="Edit details"
-                                        >
-                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                );
-                            })}
-                            {(dateData[col] || []).length === 0 && (
-                                <p className="text-xs text-gray-600 italic">No topics</p>
-                            )}
+            {/* Columns - Compact */}
+            {visibleColumns.length > 0 && (
+                <div className={`px-2 pb-2 grid grid-cols-1 ${visibleColumns.length > 1 ? 'md:grid-cols-2 lg:grid-cols-3' : ''} gap-2`}>
+                    {visibleColumns.map((col) => (
+                        <div key={col} className="bg-gray-800/40 rounded-md p-1.5 min-h-[40px] border border-white/5">
+                            <h4 className="text-[10px] font-semibold text-gray-400 mb-1 uppercase tracking-wide px-1">{col}</h4>
+                            <div className="space-y-1">
+                                {(dateData[col] || []).map((topicId) => {
+                                    const topic = completedTopics[topicId];
+                                    if (!topic) return null;
+                                    return (
+                                        <div
+                                            key={topicId}
+                                            onClick={(e) => handleProgressClick(e, topic, topicId)}
+                                            className="w-full text-left p-1.5 bg-bg-card border border-border rounded-md hover:border-accent-purple transition-all group flex items-center gap-1.5 cursor-pointer relative pr-6">
+                                            <div
+                                                className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-600'
+                                                    } ${topic.progress > 0 && topic.progress < 100 ? 'border-2 border-accent-blue bg-transparent' : ''}`}
+                                            />
+                                            <div className="flex-1 min-w-0">
+                                                <span className={`text-xs truncate block ${topic.progress === 100 ? 'text-gray-500 line-through' : 'text-white'}`}>
+                                                    {topic.name}
+                                                </span>
+                                                {topic.note && (
+                                                    <span className="text-[10px] text-gray-500 truncate italic">
+                                                        {topic.note}
+                                                    </span>
+                                                )}
+                                                {topic.estimatedTime && (
+                                                    <span className="text-[10px] text-accent-purple truncate font-mono flex items-center gap-1 mt-0.5">
+                                                        <span className="text-xs">⏰</span> {topic.estimatedTime}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <span className={`text-[10px] font-mono ${topic.progress === 100 ? 'text-green-500' : 'text-gray-500'}`}>
+                                                {topic.progress}%
+                                            </span>
+
+                                            {/* Edit Pencil - Absolute positioned for consistent placement */}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onEditTopic(topicId);
+                                                }}
+                                                className="opacity-0 group-hover:opacity-100 absolute right-2 p-1 text-gray-400 hover:text-accent-blue bg-bg-card/80 rounded transition-all"
+                                                title="Edit details"
+                                            >
+                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    );
+                                })}
+                                {(dateData[col] || []).length === 0 && (
+                                    <p className="text-xs text-gray-600 italic">No topics</p>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
 
             {/* Add Topic Button */}
             <div className="px-2 pb-2">

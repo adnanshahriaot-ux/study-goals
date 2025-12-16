@@ -38,6 +38,12 @@ export interface StudyType {
     name: string;
 }
 
+export interface Subject {
+    key: string;
+    name: string;
+    color?: string;
+}
+
 export interface CountdownSettings {
     title: string;
     targetDate: string;
@@ -46,6 +52,7 @@ export interface CountdownSettings {
 
 export interface AppSettings {
     customStudyTypes: StudyType[];
+    customSubjects: Subject[];
     countdownSettings: CountdownSettings;
 }
 
