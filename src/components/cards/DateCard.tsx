@@ -178,39 +178,34 @@ export const DateCard: React.FC<DateCardProps> = ({
                 )}
             </div>
 
-            {/* Pull from Targets Modal - Redesigned for Desktop */}
+            {/* Pull from Targets Modal */}
             {showPullModal && (
-                <div className="fixed inset-0 z-[100]" onClick={() => setShowPullModal(false)}>
-                    {/* Dark Overlay */}
-                    <div className="absolute inset-0 bg-black/80" />
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn"
+                    onClick={() => { setShowPullModal(false); setSelectedColumn(null); }}
+                >
+                    <div
+                        className="w-full max-w-lg bg-bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="px-5 py-4 border-b border-border">
+                            <h3 className="text-lg font-semibold text-white">📚 Pull from Targets</h3>
+                        </div>
 
-                    {/* Modal Content */}
-                    <div className="relative h-full flex items-center justify-center p-4">
-                        <div className="bg-[#1a1f2e] border border-white/10 rounded-2xl overflow-hidden max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl animate-slideUp" onClick={e => e.stopPropagation()}>
-                            {/* Header */}
-                            <div className="px-6 py-4 border-b border-white/10 bg-[#0d1117] flex items-center justify-between">
-                                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                                    <span className="text-2xl">📚</span> Pull Topics from Targets
-                                </h3>
-                                <button
-                                    onClick={() => { setShowPullModal(false); setSelectedColumn(null); }}
-                                    className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-all text-xl"
-                                >
-                                    ×
-                                </button>
-                            </div>
-
-                            {/* Session Selector - Grid Layout */}
-                            <div className="px-6 py-4 border-b border-white/10 bg-[#151922]">
-                                <p className="text-gray-400 text-sm mb-3">Select session to add topics:</p>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {/* Content */}
+                        <div className="p-5 space-y-4">
+                            {/* Session Selector */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">Add to Session</label>
+                                <div className="grid grid-cols-2 gap-2">
                                     {columns.map(col => (
                                         <button
                                             key={col}
                                             onClick={() => setSelectedColumn(col)}
-                                            className={`p-3 rounded-xl text-center font-medium transition-all ${selectedColumn === col
-                                                ? 'bg-gradient-to-r from-accent-blue to-accent-purple text-white shadow-lg'
-                                                : 'bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300'
+                                            className={`p-2.5 rounded-lg text-sm font-medium transition-all ${selectedColumn === col
+                                                    ? 'bg-accent-blue text-white'
+                                                    : 'bg-bg-hover border border-border text-gray-300 hover:border-accent-blue'
                                                 }`}
                                         >
                                             {col}
@@ -219,50 +214,47 @@ export const DateCard: React.FC<DateCardProps> = ({
                                 </div>
                             </div>
 
-                            {/* Topics List - Scrollable */}
-                            <div className="flex-1 overflow-y-auto p-6">
-                                {selectedColumn ? (
-                                    <>
-                                        <p className="text-gray-400 text-sm mb-4">
-                                            Adding to: <span className="text-white font-medium">{selectedColumn}</span>
-                                            <span className="ml-2 text-gray-500">({availableTargetTopics.length} available)</span>
-                                        </p>
-
-                                        {/* Topics grouped by target - 2 columns on desktop */}
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                            {availableTargetTopics.map(({ topicId, topic, targetTitle, column }) => (
-                                                <button
-                                                    key={topicId}
-                                                    onClick={() => handlePullTopic(topicId, selectedColumn)}
-                                                    className="p-4 text-left glass-card hover:border-accent-purple/50 rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
-                                                >
-                                                    <div className="flex items-center gap-2 mb-2">
-                                                        <span className={`w-3 h-3 rounded-full ${topic.progress === 100 ? 'bg-green-500' : topic.progress > 0 ? 'bg-yellow-500' : 'bg-gray-500'}`} />
-                                                        <span className="text-white font-semibold truncate flex-1">{topic.name}</span>
+                            {/* Topics List */}
+                            {selectedColumn && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                        Available Topics ({availableTargetTopics.length})
+                                    </label>
+                                    <div className="max-h-48 overflow-y-auto space-y-2 pr-1">
+                                        {availableTargetTopics.map(({ topicId, topic, targetTitle, column }) => (
+                                            <button
+                                                key={topicId}
+                                                onClick={() => handlePullTopic(topicId, selectedColumn)}
+                                                className="w-full p-3 text-left bg-bg-hover border border-border rounded-lg hover:border-accent-purple transition-all group"
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`w-2 h-2 rounded-full ${topic.progress === 100 ? 'bg-green-500' : 'bg-gray-500'}`} />
+                                                        <span className="text-white font-medium text-sm">{topic.name}</span>
                                                     </div>
-                                                    <div className="flex items-center justify-between text-xs text-gray-500">
-                                                        <span className="truncate">{column} • {targetTitle}</span>
-                                                        <span className={`ml-2 px-2 py-0.5 rounded-full ${topic.progress === 100 ? 'bg-green-500/20 text-green-400' : 'bg-white/10 text-gray-400'}`}>
-                                                            {topic.progress}%
-                                                        </span>
-                                                    </div>
-                                                </button>
-                                            ))}
-                                        </div>
-
+                                                    <span className="text-xs px-2 py-0.5 rounded bg-white/10 text-gray-400 group-hover:bg-accent-purple/20 group-hover:text-accent-purple">
+                                                        + Add
+                                                    </span>
+                                                </div>
+                                                <p className="text-xs text-gray-500 mt-1">{column} • {targetTitle}</p>
+                                            </button>
+                                        ))}
                                         {availableTargetTopics.length === 0 && (
-                                            <div className="text-center py-12 text-gray-500">
-                                                <p className="text-xl mb-2">🎉 All caught up!</p>
-                                                <p className="text-sm">All topics from Targets are already in this Daily Plan</p>
-                                            </div>
+                                            <p className="text-center text-gray-500 text-sm py-4">All topics already added</p>
                                         )}
-                                    </>
-                                ) : (
-                                    <div className="text-center py-12 text-gray-500">
-                                        <p className="text-lg">👆 Select a session above to see available topics</p>
                                     </div>
-                                )}
-                            </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Footer */}
+                        <div className="px-5 py-4 border-t border-border bg-black/30 flex justify-end">
+                            <button
+                                onClick={() => { setShowPullModal(false); setSelectedColumn(null); }}
+                                className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                            >
+                                Close
+                            </button>
                         </div>
                     </div>
                 </div>
